@@ -1,2 +1,171 @@
 # itsaiyou
-採用のためのWEBページ
+
+IT未経験・学歴不問に特化した、求人紹介／キャリア相談サイトです。
+
+高卒・専門卒・フリーター・異業種からの転職希望者を対象に、
+IT業界の情報提供と初期相談を行い、提携先の有料職業紹介事業者へおつなぎするための窓口サイトです。
+
+- 技術構成：Next.js 16（App Router）+ TypeScript + Tailwind CSS v4
+- ビルド形態：静的書き出し（`output: "export"`）。`out/` をそのまま公開できます
+- 外部依存なし：APIサーバー不要。フォームもクライアント側で完結します
+
+---
+
+## 1. 公開前に必ず差し替えるもの
+
+すべて **`src/data/site.ts`** に集約してあります。`★TODO` を検索してください。
+
+| 項目 | 現在の値 | 差し替え内容 |
+| --- | --- | --- |
+| `contact.lineUrl` | `https://lin.ee/XXXXXXX` | LINE公式アカウントの友だち追加URL |
+| `contact.email` | `example@example.com` | 問い合わせ用メールアドレス |
+| `url` | `https://example.com` | 公開する独自ドメイン |
+| `operator.*` | 空欄 | 運営者名・代表者名・所在地 |
+| `name` / `tagline` | ゼロイチIT | 屋号を変えたい場合はここだけ変更 |
+
+`site.partners` には公開情報にもとづく提携先の許可番号・所在地を記載しています。
+**公開前に堀口さんへ最新の内容を確認し、必要なら修正してください。**
+
+### 求人データについて
+
+`src/data/jobs.ts` に入っているのは、未経験歓迎求人によくある条件をまとめた
+**モデルケース**であり、実在する特定企業の求人票ではありません。
+その旨は求人一覧・求人詳細・フッターに明記してあります。
+
+実際の求人票を掲載する場合は、求人企業または提携エージェントから正式な情報を受け取り、
+職業安定法第5条の3が定める明示事項（業務内容、契約期間、就業場所、労働時間、
+賃金、社会保険の適用、募集者の氏名または名称 など）を満たす内容に差し替えてください。
+
+---
+
+## 2. 開発
+
+```bash
+npm install
+npm run dev        # http://localhost:3000
+npm run build      # out/ に静的ファイルを書き出し
+npm run typecheck  # 型チェックのみ
+```
+
+ビルド後の動作確認：
+
+```bash
+npx serve out
+# もしくは
+python3 -m http.server 4321 --directory out
+```
+
+---
+
+## 3. デプロイ
+
+### Vercel（おすすめ・無料）
+
+GitHubリポジトリを接続するだけで自動ビルド・自動デプロイされます。設定変更は不要です。
+
+### Netlify / Cloudflare Pages
+
+- ビルドコマンド：`npm run build`
+- 公開ディレクトリ：`out`
+
+### GitHub Pages（サブディレクトリ配信の場合）
+
+リポジトリ名のパス配下に置く場合は `BASE_PATH` を指定してビルドします。
+
+```bash
+BASE_PATH=/itsaiyou npm run build
+```
+
+---
+
+## 4. 相談フォームの送信先（任意）
+
+`/entry` のフォームは、既定では **どこにも送信せず**、
+13項目を整形したテキストを画面に表示してコピーできるようにするだけです。
+利用者はそれをLINEに貼り付けて送ります（入力内容はサーバーに保存されません）。
+
+入力内容を自分宛てに自動送信したい場合は、`.env.local` に送信先を設定してください。
+
+```bash
+NEXT_PUBLIC_FORM_ENDPOINT=https://script.google.com/macros/s/xxxxx/exec
+```
+
+Google Apps Script（スプレッドシートに追記する例）：
+
+```javascript
+function doPost(e) {
+  const data = JSON.parse(e.postData.contents);
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  sheet.appendRow([
+    new Date(),
+    data.name,
+    data.age,
+    data.education,
+    data.desiredPrefecture,
+    data.desiredMonth,
+    data.employmentStatus,
+    data.lastEmploymentType,
+    data.tenure,
+    data.jobChangeCount,
+    data.residence,
+    data.reason,
+    data.desiredIndustry,
+    data.isJobTypeMandatory,
+    data.contact,
+    data.note,
+  ]);
+  return ContentService.createTextOutput("ok");
+}
+```
+
+デプロイ時は「アクセスできるユーザー：全員」で公開してください。
+Formspree などのフォームサービスのURLをそのまま指定することもできます。
+
+> 個人情報を外部サービスに保存することになるため、
+> プライバシーポリシー（`src/app/privacy/page.tsx`）の記載と実態が合っているか確認してください。
+
+---
+
+## 5. ページ構成
+
+| パス | 内容 |
+| --- | --- |
+| `/` | トップ。共感パート → 30秒診断 → 3ルート → 約束 → 流れ → ガイド → 求人例 → FAQ |
+| `/courses` | 3ルート（インフラ／WEB／Salesforce）の比較と詳細。向いていない人も明記 |
+| `/jobs`, `/jobs/[slug]` | 求人モデルケースの一覧と詳細 |
+| `/guide`, `/guide/[slug]` | 未経験ガイド5本（職種図鑑・志望動機・事前準備・現実・面接想定問答） |
+| `/entry` | 事前ヒアリング13項目のフォーム。LINE送信用テキストを生成 |
+| `/faq` | よくある質問（費用／学歴／適性／選考） |
+| `/about` | 立場・お金の流れ・提携先・運営者情報 |
+| `/privacy` | プライバシーポリシー |
+
+### コンテンツの編集場所
+
+文章はすべて `src/data/` 配下のデータファイルにあります。HTMLを触らずに編集できます。
+
+- `site.ts` … 屋号・連絡先・提携先・運営者情報
+- `courses.ts` … 3つのルート
+- `jobs.ts` … 求人モデルケース
+- `guides.ts` … 未経験ガイドの記事本文
+- `faq.ts` … よくある質問
+
+---
+
+## 6. 法令面で確認しておきたいこと
+
+このサイトは、運営者を **職業紹介事業者ではなく「情報提供と初期相談を行い、
+許可を受けた提携先へおつなぎする窓口」** として設計・表記しています。
+求人紹介・応募者の推薦・面接調整・雇用条件の提示は提携先が行う、と全ページで明示しています。
+
+ただし、求職者と求人者の間に立って雇用関係の成立をあっせんする行為は、
+職業安定法上の「職業紹介」に該当し、有料で行うには厚生労働大臣の許可が必要です。
+どこまでが「取次ぎ」で、どこからが「職業紹介」にあたるかは、実際の関与の度合いで判断されます。
+
+以下は公開前に確認しておくことをおすすめします。
+
+1. 提携先（合同会社H CAREER）に、この形態でのパートナー活動が許可の範囲内で問題ないか確認する
+2. 候補者の選考や条件交渉に踏み込みすぎない運用にする（サイト上もその前提で書いています）
+3. 心配が残る場合は、労働局の需給調整事業部門または社会保険労務士に確認する
+
+また、提携先から紹介料を受け取る関係にあることは `/about` で明示しています
+（ステルスマーケティング規制への対応も兼ねています）。この記載は消さないでください。
