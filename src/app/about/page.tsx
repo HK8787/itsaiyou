@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/Container";
 import { CtaBand } from "@/components/CtaBand";
 import { PageHero } from "@/components/PageHero";
+import { disclosePartners, partners } from "@/data/partners";
 import { site } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -136,55 +137,78 @@ export default function AboutPage() {
           <h2 className="mt-16 text-xl font-bold text-ink-900 sm:text-2xl">
             提携先について
           </h2>
-          <div className="mt-6 space-y-5">
-            {site.partners.map((partner) => (
-              <div
-                key={partner.name}
-                className="rounded-3xl border border-ink-200 p-7"
-              >
-                <h3 className="text-base font-bold text-ink-900">
-                  {partner.name}
-                </h3>
-                <dl className="mt-4 space-y-2 text-sm">
-                  <div className="flex gap-3">
-                    <dt className="w-28 shrink-0 text-ink-500">担当領域</dt>
-                    <dd className="text-ink-700">{partner.role}</dd>
-                  </div>
-                  <div className="flex gap-3">
-                    <dt className="w-28 shrink-0 text-ink-500">
-                      {partner.licenseLabel}
-                    </dt>
-                    <dd className="text-ink-700">{partner.licenseNumber}</dd>
-                  </div>
-                  {partner.representative ? (
+
+          {disclosePartners ? null : (
+            <div className="mt-6 rounded-3xl border border-ink-200 bg-ink-50 p-7">
+              <p className="text-[0.95rem] leading-relaxed text-ink-700">
+                お取次ぎ先は、
+                <strong className="text-ink-900">
+                  厚生労働大臣の許可を受けた有料職業紹介事業者
+                </strong>
+                です。求人紹介・企業への推薦・面接調整・雇用条件の提示および入社手続きは、
+                すべて当該事業者が行います。
+              </p>
+              <p className="mt-4 text-[0.95rem] leading-relaxed text-ink-700">
+                具体的な社名と許可番号は、ご相談の中で必ずお伝えします。
+                お取次ぎの前に、どの会社にお繋ぎするのかを確認いただけますので、
+                納得されてから進めてください。
+              </p>
+            </div>
+          )}
+
+          {disclosePartners ? (
+            <div className="mt-6 space-y-5">
+              {partners.map((partner) => (
+                <div
+                  key={partner.name}
+                  className="rounded-3xl border border-ink-200 p-7"
+                >
+                  <h3 className="text-base font-bold text-ink-900">
+                    {partner.name}
+                  </h3>
+                  <dl className="mt-4 space-y-2 text-sm">
                     <div className="flex gap-3">
-                      <dt className="w-28 shrink-0 text-ink-500">代表者</dt>
-                      <dd className="text-ink-700">{partner.representative}</dd>
+                      <dt className="w-28 shrink-0 text-ink-500">担当領域</dt>
+                      <dd className="text-ink-700">{partner.role}</dd>
                     </div>
-                  ) : null}
-                  <div className="flex gap-3">
-                    <dt className="w-28 shrink-0 text-ink-500">所在地</dt>
-                    <dd className="text-ink-700">{partner.address}</dd>
-                  </div>
-                  <div className="flex gap-3">
-                    <dt className="w-28 shrink-0 text-ink-500">
-                      ウェブサイト
-                    </dt>
-                    <dd>
-                      <a
-                        href={partner.site}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-flame-600 underline"
-                      >
-                        {partner.site}
-                      </a>
-                    </dd>
-                  </div>
-                </dl>
-              </div>
-            ))}
-          </div>
+                    <div className="flex gap-3">
+                      <dt className="w-28 shrink-0 text-ink-500">
+                        {partner.licenseLabel}
+                      </dt>
+                      <dd className="text-ink-700">{partner.licenseNumber}</dd>
+                    </div>
+                    {partner.representative ? (
+                      <div className="flex gap-3">
+                        <dt className="w-28 shrink-0 text-ink-500">代表者</dt>
+                        <dd className="text-ink-700">
+                          {partner.representative}
+                        </dd>
+                      </div>
+                    ) : null}
+                    <div className="flex gap-3">
+                      <dt className="w-28 shrink-0 text-ink-500">所在地</dt>
+                      <dd className="text-ink-700">{partner.address}</dd>
+                    </div>
+                    <div className="flex gap-3">
+                      <dt className="w-28 shrink-0 text-ink-500">
+                        ウェブサイト
+                      </dt>
+                      <dd>
+                        <a
+                          href={partner.site}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-flame-600 underline"
+                        >
+                          {partner.site}
+                        </a>
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              ))}
+            </div>
+          ) : null}
 
           <h2 className="mt-16 text-xl font-bold text-ink-900 sm:text-2xl">
             運営者情報

@@ -48,31 +48,11 @@ export const site = {
     role: "情報提供および提携先への取次ぎ",
   },
 
-  /**
-   * 提携先（実際に職業紹介・案件紹介を行う会社）。
-   * 公開情報にもとづく記載です。公開前に最新の許可番号・所在地をご本人に確認してください。
-   */
-  partners: [
-    {
-      name: "合同会社H CAREER",
-      role: "正社員転職の職業紹介",
-      licenseLabel: "有料職業紹介事業許可番号",
-      licenseNumber: "13-ユ-316640",
-      address: "東京都新宿区四谷三栄町9-6 四谷三栄町スクエア6F",
-      representative: "代表社員 堀口 裕基",
-      site: "https://humantalent-ml.com",
-    },
-    {
-      name: "合同会社HTML（HTML Group）",
-      role: "ITエンジニアの案件紹介・業務委託契約",
-      licenseLabel: "所在地",
-      licenseNumber: "東京都新宿区四谷三栄町9-6 四谷三栄町スクエア",
-      address: "東京都新宿区四谷三栄町9-6 四谷三栄町スクエア",
-      representative: "",
-      site: "https://humantalent-ml.com",
-    },
-  ],
 } as const;
+
+// 提携先の社名・許可番号は src/data/partners.ts（サーバー側限定）にあります。
+// site.ts はクライアント側コンポーネントからも読み込まれるため、
+// ブラウザに配信したくない情報はここに置かないでください。
 
 /** ヘッダー／フッターの共通ナビゲーション */
 export const navigation = [

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Container } from "@/components/Container";
+import { disclosePartners, partners } from "@/data/partners";
 import { navigation, site } from "@/data/site";
 
 export function Footer() {
@@ -64,14 +65,16 @@ export function Footer() {
             ご希望に応じて厚生労働大臣の許可を受けた提携先の有料職業紹介事業者へおつなぎする窓口です。
             求人紹介・面接調整・雇用条件の提示および入社手続きは、すべて提携先が行います。
           </p>
-          <ul className="mt-3 space-y-1">
-            {site.partners.map((partner) => (
-              <li key={partner.name}>
-                提携先：{partner.name}（{partner.role}／{partner.licenseLabel}{" "}
-                {partner.licenseNumber}）
-              </li>
-            ))}
-          </ul>
+          {disclosePartners ? (
+            <ul className="mt-3 space-y-1">
+              {partners.map((partner) => (
+                <li key={partner.name}>
+                  提携先：{partner.name}（{partner.role}／{partner.licenseLabel}{" "}
+                  {partner.licenseNumber}）
+                </li>
+              ))}
+            </ul>
+          ) : null}
           <p className="mt-3">
             掲載している求人情報は、未経験歓迎求人の条件傾向をまとめたモデルケースです。
             実際の募集要項は面談時に個別にご案内します。
