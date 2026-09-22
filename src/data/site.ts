@@ -22,8 +22,8 @@ export const site = {
 
   /** 問い合わせ導線 */
   contact: {
-    /** ★TODO: LINE公式アカウント or 個人LINEの友だち追加URL（例: https://lin.ee/xxxxxxx） */
-    lineUrl: "https://lin.ee/XXXXXXX",
+    /** LINE公式アカウントの友だち追加URL */
+    lineUrl: "https://lin.ee/rbh7p1Q",
     /** ★TODO: 問い合わせ用メールアドレス */
     email: "example@example.com",
     /** 返信の目安。実態に合わせて書き換えてください */
