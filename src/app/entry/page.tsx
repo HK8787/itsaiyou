@@ -17,19 +17,19 @@ export const metadata: Metadata = {
 };
 
 const points = [
-  "所要時間は約3分です",
-  "入力内容は運営者にのみ送信されます",
-  "相談したからといって、転職を決める必要はありません",
-  "分からない項目は空欄のまま送っていただいても構いません",
+  "相談は何度でも無料。費用の負担はありません",
+  "転職するかどうかは、話してから決めて大丈夫です",
+  "在職中でも、まだ迷っている段階でも構いません",
+  "しつこい勧誘の電話をかけることはありません",
 ];
 
 export default function EntryPage() {
   return (
     <>
       <PageHero
-        eyebrow="Entry"
-        title="無料キャリア相談フォーム"
-        lead="提携エージェントが事前に確認する13項目です。ここを埋めておくと初回のやり取りが一気に短くなり、その分だけ具体的な話ができます。"
+        eyebrow="Contact"
+        title="無料キャリア相談"
+        lead="LINEでそのまま話しかけてください。「何から聞けばいいか分からない」で大丈夫です。こちらから順番にお伺いします。"
       />
 
       <section className="py-14 sm:py-20">
@@ -48,15 +48,17 @@ export default function EntryPage() {
             ))}
           </ul>
 
-          <div className="mt-9 rounded-3xl border border-ink-200 bg-white p-6 sm:p-7">
-            <p className="text-center text-sm text-ink-600">
-              フォームが面倒であれば、LINEで直接お話しいただいても大丈夫です。
-            </p>
+          <div className="mt-9 rounded-3xl border-2 border-[#06c755]/30 bg-white p-6 sm:p-8">
+            <div className="flex flex-col items-center gap-7 sm:flex-row sm:justify-center sm:gap-9">
+              <div className="w-full sm:w-auto">
+                <LineButton
+                  size="lg"
+                  block
+                  note={`返信の目安：${site.contact.replyTime}`}
+                />
+              </div>
 
-            <div className="mt-5 flex flex-col items-center gap-6 sm:flex-row sm:justify-center sm:gap-8">
-              <LineButton note={`返信の目安：${site.contact.replyTime}`} />
-
-              <div className="flex flex-col items-center">
+              <div className="flex shrink-0 flex-col items-center">
                 <Image
                   src={`${basePath}/line-qr.png`}
                   alt={`${site.name}のLINE友だち追加用QRコード`}
@@ -72,9 +74,28 @@ export default function EntryPage() {
             </div>
           </div>
 
-          <div className="mt-14">
-            <EntryForm />
-          </div>
+          {/*
+            フォームは折りたたんでおく。
+            LINEを使っていない人と、先に情報を渡しておきたい人のための
+            受け皿であって、全員に通ってもらう導線ではない。
+            14項目を最初に見せると、迷っている段階の人ほど離脱する。
+          */}
+          <details className="group mt-12 rounded-3xl border border-ink-200 bg-white p-6 sm:p-7">
+            <summary className="cursor-pointer list-none text-center">
+              <span className="font-bold text-ink-800 underline underline-offset-4">
+                LINEを使っていない方・先に内容を伝えておきたい方はこちら
+              </span>
+              <span className="mt-2 block text-sm text-ink-500">
+                提携エージェントが事前に確認する14項目を入力して送れます（約3分）
+                <span className="ml-1 inline-block group-open:hidden">▼</span>
+                <span className="ml-1 hidden group-open:inline-block">▲</span>
+              </span>
+            </summary>
+
+            <div className="mt-10">
+              <EntryForm />
+            </div>
+          </details>
         </Container>
       </section>
     </>

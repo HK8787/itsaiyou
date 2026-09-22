@@ -33,12 +33,14 @@ export function Header() {
               {item.label}
             </Link>
           ))}
-          <Link
-            href="/entry/"
-            className="rounded-full bg-flame-500 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-flame-600"
+          <a
+            href={site.contact.lineUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full bg-[#06c755] px-5 py-2.5 text-sm font-bold text-white transition hover:brightness-95"
           >
-            無料で相談する
-          </Link>
+            LINEで無料相談
+          </a>
         </nav>
 
         <button
@@ -84,12 +86,21 @@ export function Header() {
               </li>
             ))}
           </ul>
+          <a
+            href={site.contact.lineUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setOpen(false)}
+            className="mt-5 block rounded-full bg-[#06c755] py-3.5 text-center font-bold text-white"
+          >
+            LINEで無料相談
+          </a>
           <Link
             href="/entry/"
             onClick={() => setOpen(false)}
-            className="mt-5 block rounded-full bg-flame-500 py-3.5 text-center font-bold text-white"
+            className="mt-3 block text-center text-sm text-ink-500 underline underline-offset-4"
           >
-            無料で相談する
+            フォームから送る
           </Link>
         </nav>
       ) : null}

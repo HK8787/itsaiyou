@@ -21,19 +21,18 @@ export function CtaBand({
             {lead}
           </p>
 
-          <div className="mt-9 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+          <div className="mt-9 flex flex-col items-center">
             <LineButton size="lg" />
+            <p className="mt-5 text-sm text-ink-200">
+              返信の目安：{site.contact.replyTime}
+            </p>
             <Link
               href="/entry/"
-              className="inline-flex items-center rounded-full border border-white/35 px-7 py-4 font-bold text-white transition hover:bg-white/10"
+              className="mt-6 text-sm text-ink-300 underline underline-offset-4 transition hover:text-white"
             >
-              フォームから相談する
+              LINEを使っていない方は、フォームからも送れます
             </Link>
           </div>
-
-          <p className="mt-6 text-sm text-ink-200">
-            返信の目安：{site.contact.replyTime}
-          </p>
         </div>
       </Container>
     </section>

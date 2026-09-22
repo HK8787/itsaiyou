@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { CtaBand } from "@/components/CtaBand";
+import { LineButton } from "@/components/LineButton";
 import { PageHero } from "@/components/PageHero";
 import { courses } from "@/data/courses";
 import { jobs } from "@/data/jobs";
@@ -208,12 +209,7 @@ export default function CoursesPage() {
             </div>
 
             <div className="mt-8">
-              <Link
-                href="/entry/"
-                className="inline-flex rounded-full bg-ink-900 px-7 py-3.5 font-bold text-white transition hover:bg-ink-800"
-              >
-                このルートについて相談する
-              </Link>
+              <LineButton>このルートについてLINEで相談する</LineButton>
             </div>
           </Container>
         </section>

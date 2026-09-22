@@ -40,7 +40,7 @@ export function Footer() {
                   href="/entry/"
                   className="text-ink-600 hover:text-flame-600"
                 >
-                  無料相談フォーム
+                  無料で相談する
                 </Link>
               </li>
               <li>
