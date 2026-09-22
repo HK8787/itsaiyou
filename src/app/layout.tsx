@@ -61,6 +61,19 @@ export default function RootLayout({
         <main id="main">{children}</main>
         <Footer />
         <StickyCta />
+
+        {/*
+          Cloudflare Web Analytics。site.analyticsToken が空のあいだは
+          何も出力しないので、未設定でも外部リクエストは発生しない。
+          Cookieを使わず個人を特定しないため、同意バナーは不要。
+        */}
+        {site.analyticsToken ? (
+          <script
+            defer
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon={JSON.stringify({ token: site.analyticsToken })}
+          />
+        ) : null}
       </body>
     </html>
   );

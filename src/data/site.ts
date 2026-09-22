@@ -56,6 +56,20 @@ export const site = {
     "https://script.google.com/macros/s/AKfycbygMJun9kow9VNim356HCv0O24gxMMEQ742PLYRkQPRPUcWi4Fu0oHxejjQ776VcHbx/exec",
 
   /**
+   * アクセス解析（Cloudflare Web Analytics）のトークン。
+   *
+   * 空文字のあいだは計測タグを一切出力しない。導入するまで
+   * 外部スクリプトが増えないので、空のままでも問題なく動く。
+   *
+   * 取得手順は docs/marketing/analytics-setup.md。
+   * Cookieを使わず、個人を特定する情報も集めない仕組みのため、
+   * Cookie同意バナーは不要（プライバシーポリシー7項に記載済み）。
+   *
+   * 環境変数 NEXT_PUBLIC_CF_BEACON_TOKEN でも上書きできる。
+   */
+  analyticsToken: process.env.NEXT_PUBLIC_CF_BEACON_TOKEN || "",
+
+  /**
    * 運営者情報。
    *
    * 氏名と住所はサイトに常時掲載していません。
