@@ -24,8 +24,11 @@ export const site = {
   contact: {
     /** LINE公式アカウントの友だち追加URL */
     lineUrl: "https://lin.ee/rbh7p1Q",
-    /** ★TODO: 問い合わせ用メールアドレス */
-    email: "example@example.com",
+    /**
+     * 問い合わせ窓口。
+     * 氏名・住所の開示請求を受ける窓口でもあるため、必ず受信・返信できること。
+     */
+    email: "pageya.info@gmail.com",
     /** 返信の目安。実態に合わせて書き換えてください */
     replyTime: "原則24時間以内（土日祝含む）",
   },
