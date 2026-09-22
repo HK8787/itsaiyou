@@ -34,12 +34,22 @@ export const site = {
   },
 
   /**
-   * 任意：入力フォームの内容を自分宛てに自動送信したい場合、
-   * .env.local に NEXT_PUBLIC_FORM_ENDPOINT を設定してください。
-   * 例) Google Apps Script の /exec URL、Formspree の https://formspree.io/f/xxxx など。
-   * 未設定の場合はフォーム送信は行わず、LINEで送る用のテキスト生成のみ動作します。
+   * 相談フォームの送信先（Google Apps Script のウェブアプリURL）。
+   *
+   * 送信されるとスプレッドシートに1行追記され、contact.email に通知メールが届く。
+   * スクリプトは docs/marketing/gas-form-receiver.gs、手順は同 form-setup.md。
+   *
+   * このURLは秘匿情報ではない。NEXT_PUBLIC_ の値はどのみちブラウザに
+   * 配信されるため、環境変数にしてもソースに書いても露出度は変わらない。
+   * 読み手にとって分かりやすい方を選んでここに直接置いている。
+   *
+   * スクリプトを更新したら「デプロイを管理 → 編集 → 新バージョン」で
+   * 反映すること。新規デプロイするとURLが変わるので、その場合はここも更新する。
+   * 環境変数 NEXT_PUBLIC_FORM_ENDPOINT を渡せば上書きできる。
    */
-  formEndpoint: process.env.NEXT_PUBLIC_FORM_ENDPOINT ?? "",
+  formEndpoint:
+    process.env.NEXT_PUBLIC_FORM_ENDPOINT ||
+    "https://script.google.com/macros/s/AKfycbxvNOyJMX886RQsZ4ISxLexr6YHldGL-8L0RCxxAG6QAfozKfuoUDmlhWD7a6RqGC3L/exec",
 
   /**
    * 運営者情報。
