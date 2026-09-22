@@ -3,7 +3,14 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { StickyCta } from "@/components/StickyCta";
 import { site } from "@/data/site";
+import { absoluteUrl } from "@/lib/url";
 import "./globals.css";
+
+// OGP や favicon は絶対URLで指定する。
+// site.url がサブディレクトリを含むため、"/ogp.png" のような絶対パスを
+// metadataBase に対する相対指定として渡すと、サブディレクトリが落ちてしまう。
+const ogImage = absoluteUrl("/ogp.png");
+const iconUrl = absoluteUrl("/icon.png");
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -12,12 +19,28 @@ export const metadata: Metadata = {
     template: `%s｜${site.name}`,
   },
   description: site.description,
+  icons: { icon: iconUrl, apple: iconUrl },
   openGraph: {
     type: "website",
     locale: "ja_JP",
     siteName: site.name,
+    url: site.url,
     title: `${site.name}｜${site.tagline}`,
     description: site.description,
+    images: [
+      {
+        url: ogImage,
+        width: 1200,
+        height: 630,
+        alt: `${site.name}｜${site.tagline}`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name}｜${site.tagline}`,
+    description: site.description,
+    images: [ogImage],
   },
   robots: { index: true, follow: true },
 };
