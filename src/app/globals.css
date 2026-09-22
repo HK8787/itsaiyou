@@ -1,28 +1,42 @@
 @import "tailwindcss";
 
 @theme {
-  /* ブランドカラー：信頼感のあるネイビー × 一歩踏み出す背中を押すオレンジ */
-  --color-ink-50: #f4f6fb;
-  --color-ink-100: #e6ebf5;
-  --color-ink-200: #c9d4e8;
-  --color-ink-300: #9daed1;
-  --color-ink-400: #6b7fae;
-  --color-ink-500: #46598b;
-  --color-ink-600: #33446e;
-  --color-ink-700: #253356;
-  --color-ink-800: #1a2440;
-  --color-ink-900: #111a2e;
+  /*
+   * ブランドカラー：白基調 × 青のアクセント。
+   *
+   * ink-*   … 文字と余白まわりの寒色グレー
+   * flame-* … アクセント（名前は変えていないが、値は青）
+   * line    … LINE公式の緑。主要なCTAはすべてこの色
+   *
+   * flame-* という名前のまま青にしているのは、95箇所の利用側を
+   * 書き換えずに配色だけ差し替えるため。名称は実態と合っていないが、
+   * リネームすると差分が大きくなり、取りこぼしの危険があるので避けた。
+   */
+  --color-ink-50: #f4f7fb;
+  --color-ink-100: #e5ebf3;
+  --color-ink-200: #c8d5e4;
+  --color-ink-300: #9bafc6;
+  --color-ink-400: #6b819c;
+  --color-ink-500: #4a5f7a;
+  --color-ink-600: #36485f;
+  --color-ink-700: #27364a;
+  --color-ink-800: #1d2939;
+  --color-ink-900: #121b27;
 
-  --color-flame-50: #fff5ed;
-  --color-flame-100: #ffe8d5;
-  --color-flame-200: #ffcdaa;
-  --color-flame-300: #ffab74;
-  --color-flame-400: #ff7f3c;
-  --color-flame-500: #fb5e12;
-  --color-flame-600: #ec4508;
-  --color-flame-700: #c33209;
-  --color-flame-800: #9b2910;
-  --color-flame-900: #7d2510;
+  --color-flame-50: #eff7ff;
+  --color-flame-100: #dbeeff;
+  --color-flame-200: #b8dcff;
+  --color-flame-300: #7cc0f7;
+  --color-flame-400: #3fa2ef;
+  --color-flame-500: #027ddb;
+  --color-flame-600: #0168c2;
+  --color-flame-700: #0154a3;
+  --color-flame-800: #013b9e;
+  --color-flame-900: #01317f;
+
+  /* 濃色セクション（ヒーロー・CTA帯）の背景に使う深い青 */
+  --color-deep-from: #013b9e;
+  --color-deep-to: #0168c2;
 
   --color-line: #06c755;
 
@@ -70,6 +84,15 @@
   .text-balance-ja {
     text-wrap: balance;
     word-break: auto-phrase;
+  }
+
+  /* ヒーローやCTA帯の背景。深い青から明るい青へのグラデーション */
+  .bg-deep {
+    background-image: linear-gradient(
+      160deg,
+      var(--color-deep-from) 0%,
+      var(--color-deep-to) 100%
+    );
   }
 
   .bg-grid {

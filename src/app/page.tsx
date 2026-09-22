@@ -66,7 +66,7 @@ export default function HomePage() {
   return (
     <>
       {/* ヒーロー */}
-      <section className="relative overflow-hidden bg-ink-900">
+      <section className="relative overflow-hidden bg-deep">
         <div className="bg-grid absolute inset-0 opacity-60" aria-hidden />
         <div
           className="absolute -top-32 -right-24 h-96 w-96 rounded-full bg-flame-500/25 blur-3xl"
@@ -110,7 +110,7 @@ export default function HomePage() {
                 { value: "何度でも", label: "相談の回数制限" },
               ].map((stat) => (
                 <div key={stat.label}>
-                  <dt className="text-2xl font-bold text-flame-300 sm:text-3xl">
+                  <dt className="text-2xl font-bold text-white sm:text-3xl">
                     {stat.value}
                   </dt>
                   <dd className="mt-1 text-xs text-ink-200 sm:text-sm">
@@ -323,7 +323,7 @@ export default function HomePage() {
       </section>
 
       {/* ガイド */}
-      <section className="bg-ink-900 py-20 sm:py-24">
+      <section className="bg-deep py-20 sm:py-24">
         <Container>
           <div className="flex flex-wrap items-end justify-between gap-6">
             <SectionHeading
@@ -348,7 +348,7 @@ export default function HomePage() {
                 href={`/guide/${guide.slug}/`}
                 className="group flex flex-col rounded-3xl bg-white/5 p-7 ring-1 ring-white/10 transition hover:bg-white/10"
               >
-                <p className="text-xs font-bold tracking-widest text-flame-300">
+                <p className="text-xs font-bold tracking-widest text-flame-200">
                   {guide.tag}
                 </p>
                 <h3 className="mt-3 text-lg leading-snug font-bold text-white">
@@ -357,7 +357,7 @@ export default function HomePage() {
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-200">
                   {guide.lead}
                 </p>
-                <p className="mt-5 text-sm font-bold text-flame-300 group-hover:underline">
+                <p className="mt-5 text-sm font-bold text-flame-200 group-hover:underline">
                   読む（約{guide.readingMinutes}分）→
                 </p>
               </Link>
