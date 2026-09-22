@@ -206,34 +206,25 @@ def _header(copy1, copy2, sub, dark=False, size=58):
     return img
 
 
-SUB = "高卒・専門卒・フリーター・異業種から　／　相談は何度でも無料"
+SUB = "高卒・専門卒・フリーター歓迎　／　しつこい連絡はしません"
+
+COPY1 = "ひとりで決めなくて、いい。"
+COPY2 = "IT未経験の転職、一緒に考えます。"
 
 
 def make_header():
-    """A案：サイトのヒーローと同じ問いかけ。
+    """白地。Xとnoteのヘッダーはこれを使う。
 
-    サイト・OGPと同じ一文にすることで、Xから来た人が
-    「同じところに来た」と分かる。
+    「一緒に考えます」で、読んだ人に何が起きるかを一行で伝える。
+    「しつこい連絡はしません」は、無料相談で身構える最大の理由を
+    先に潰すために入れている。
     """
-    return _header("「自分なんて、IT業界とは", "無縁だ」と思っている人へ。", SUB)
+    return _header(COPY1, COPY2, SUB)
 
 
 def make_header_b():
-    """B案：ひとりで抱えなくていい、という寄り添い方。"""
-    return _header("ひとりで決めなくて、いい。", "IT未経験の転職、一緒に考えます。",
-                   "高卒・専門卒・フリーター歓迎　／　しつこい連絡はしません",
-                   size=54)
-
-
-def make_header_c():
-    """C案：踏み出す手前で止まっている人への呼びかけ。"""
-    return _header("学歴で諦める前に、", "一度だけ話してみませんか。", SUB)
-
-
-def make_header_d():
-    """D案：A案の青地版。"""
-    return _header("「自分なんて、IT業界とは", "無縁だ」と思っている人へ。", SUB,
-                   dark=True)
+    """青地。背景の明るい媒体で使う場合の予備。"""
+    return _header(COPY1, COPY2, SUB, dark=True)
 
 
 if __name__ == "__main__":
@@ -244,8 +235,6 @@ if __name__ == "__main__":
         "x-icon-b": make_icon_b(),
         "x-header": make_header(),
         "x-header-b": make_header_b(),
-        "x-header-c": make_header_c(),
-        "x-header-d": make_header_d(),
     }
     for name, im in files.items():
         im.save(f"{OUT}/{name}.png")
