@@ -8,12 +8,20 @@
  *
  * セットアップ手順は docs/marketing/form-setup.md を参照。
  * このファイルの中身を、Apps Script エディタに丸ごと貼り付けてください。
+ *
+ * ▼ サイト側は doGet（JSONP）を使います
+ * GAS のウェブアプリは script.googleusercontent.com へ 302 リダイレクトし、
+ * その先が CORS ヘッダを返さないため、ブラウザの fetch では
+ * 「届いたかどうか」を判定できません。
+ * <script> タグ経由（JSONP）なら CORS の対象外で、かつ
+ * コールバックが呼ばれたこと自体が「届いて処理された」証明になります。
+ * doPost も互換のために残してあります。
  */
 
 // 通知メールの宛先。変えたいときはここだけ書き換える。
 const NOTIFY_TO = 'pageya.info@gmail.com';
 
-// スプレッドシートの見出し行。フォームの13項目＋任意項目に対応。
+// スプレッドシートの見出し行。フォームの14項目＋任意項目に対応。
 const HEADERS = [
   '受信日時',
   '1.氏名',
@@ -29,70 +37,102 @@ const HEADERS = [
   '11.転職理由',
   '12.希望業種',
   '13.希望職種は絶対条件か',
-  '連絡先',
+  '14.連絡先',
   'その他',
 ];
 
+/**
+ * サイトのフォームからの受け口（JSONP）。
+ * 例：/exec?callback=xxx&payload=%7B...%7D
+ */
+function doGet(e) {
+  const params = (e && e.parameter) || {};
+  const callback = params.callback || '';
+
+  let result;
+  try {
+    if (!params.payload) throw new Error('payload がありません');
+    record(JSON.parse(params.payload));
+    result = { result: 'ok' };
+  } catch (err) {
+    notifyError(err, params.payload);
+    result = { result: 'error' };
+  }
+
+  const body = JSON.stringify(result);
+
+  // コールバック名は英数字とアンダースコアだけ許可する。
+  // 外から渡された文字列をそのまま出力に混ぜないための最低限のチェック。
+  if (callback && /^[A-Za-z0-9_]{1,64}$/.test(callback)) {
+    return ContentService.createTextOutput(callback + '(' + body + ');')
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+
+  return ContentService.createTextOutput(body)
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+/** 旧方式（POST）の受け口。互換のために残してある。 */
 function doPost(e) {
   try {
-    const data = JSON.parse(e.postData.contents);
-
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
-
-    // 初回だけ見出し行を作る
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(HEADERS);
-      sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
-      sheet.setFrozenRows(1);
-    }
-
-    sheet.appendRow([
-      new Date(),
-      data.name || '',
-      data.age || '',
-      data.education || '',
-      data.desiredPrefecture || '',
-      data.desiredMonth || '',
-      data.employmentStatus || '',
-      data.lastEmploymentType || '',
-      data.tenure || '',
-      data.jobChangeCount || '',
-      data.residence || '',
-      data.reason || '',
-      data.desiredIndustry || '',
-      data.isJobTypeMandatory || '',
-      data.contact || '',
-      data.note || '',
-    ]);
-
-    // 通知メール。data.formatted はサイト側で整形済みの全文。
-    MailApp.sendEmail({
-      to: NOTIFY_TO,
-      subject: '【相談フォーム】' + (data.name || '名前未記入') + ' さんから届きました',
-      body:
-        (data.formatted || JSON.stringify(data, null, 2)) +
-        '\n\n----\nスプレッドシート：\n' +
-        SpreadsheetApp.getActiveSpreadsheet().getUrl(),
-    });
-
-    return ContentService.createTextOutput(
-      JSON.stringify({ result: 'ok' }),
-    ).setMimeType(ContentService.MimeType.JSON);
+    record(JSON.parse(e.postData.contents));
+    return ContentService.createTextOutput(JSON.stringify({ result: 'ok' }))
+      .setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
-    // 失敗しても、届いた内容だけは自分に飛ばしておく（取りこぼし防止）
-    MailApp.sendEmail({
-      to: NOTIFY_TO,
-      subject: '【相談フォーム】受信処理でエラー',
-      body:
-        'エラー: ' +
-        err +
-        '\n\n受信した生データ:\n' +
-        (e && e.postData ? e.postData.contents : '(なし)'),
-    });
-    return ContentService.createTextOutput(
-      JSON.stringify({ result: 'error' }),
-    ).setMimeType(ContentService.MimeType.JSON);
+    notifyError(err, e && e.postData ? e.postData.contents : '');
+    return ContentService.createTextOutput(JSON.stringify({ result: 'error' }))
+      .setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+/** スプレッドシートに追記し、通知メールを送る。 */
+function record(data) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+
+  // 初回だけ見出し行を作る
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(HEADERS);
+    sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
+    sheet.setFrozenRows(1);
+  }
+
+  sheet.appendRow([
+    new Date(),
+    data.name || '',
+    data.age || '',
+    data.education || '',
+    data.desiredPrefecture || '',
+    data.desiredMonth || '',
+    data.employmentStatus || '',
+    data.lastEmploymentType || '',
+    data.tenure || '',
+    data.jobChangeCount || '',
+    data.residence || '',
+    data.reason || '',
+    data.desiredIndustry || '',
+    data.isJobTypeMandatory || '',
+    data.contact || '',
+    data.note || '',
+  ]);
+
+  // 通知メール。data.formatted はサイト側で整形済みの全文。
+  MailApp.sendEmail({
+    to: NOTIFY_TO,
+    subject: '【相談フォーム】' + (data.name || '名前未記入') + ' さんから届きました',
+    body:
+      (data.formatted || JSON.stringify(data, null, 2)) +
+      '\n\n----\nスプレッドシート：\n' +
+      SpreadsheetApp.getActiveSpreadsheet().getUrl(),
+  });
+}
+
+/** 失敗しても、届いた内容だけは自分に飛ばしておく（取りこぼし防止）。 */
+function notifyError(err, raw) {
+  MailApp.sendEmail({
+    to: NOTIFY_TO,
+    subject: '【相談フォーム】受信処理でエラー',
+    body: 'エラー: ' + err + '\n\n受信した生データ:\n' + (raw || '(なし)'),
+  });
 }
 
 /**
@@ -101,26 +141,22 @@ function doPost(e) {
  * 初回実行時に権限の承認を求められるので、許可してください。
  */
 function testRun() {
-  doPost({
-    postData: {
-      contents: JSON.stringify({
-        name: 'テスト 太郎',
-        age: '28',
-        education: '高校卒業',
-        desiredPrefecture: '東京都',
-        desiredMonth: '2026年11月',
-        employmentStatus: '在職中',
-        lastEmploymentType: 'アルバイト・パート',
-        tenure: '2年3ヶ月',
-        jobChangeCount: '2回',
-        residence: '千葉県',
-        reason: 'スキルを積み上げて長く働ける仕事に移りたい',
-        desiredIndustry: 'インフラエンジニア（サーバー・ネットワーク）',
-        isJobTypeMandatory: '条件次第で検討できる',
-        contact: 'LINE名：タロウ',
-        note: '夜勤NG',
-        formatted: '（これはテスト送信です）',
-      }),
-    },
+  record({
+    name: 'テスト 太郎',
+    age: '28',
+    education: '高校卒業',
+    desiredPrefecture: '東京都',
+    desiredMonth: '2026年11月',
+    employmentStatus: '在職中',
+    lastEmploymentType: 'アルバイト・パート',
+    tenure: '2年3ヶ月',
+    jobChangeCount: '2回',
+    residence: '千葉県',
+    reason: 'スキルを積み上げて長く働ける仕事に移りたい',
+    desiredIndustry: 'インフラエンジニア（サーバー・ネットワーク）',
+    isJobTypeMandatory: '条件次第で検討できる',
+    contact: 'taro@example.com',
+    note: '夜勤NG',
+    formatted: '（これはテスト送信です）',
   });
 }
