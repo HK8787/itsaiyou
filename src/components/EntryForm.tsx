@@ -81,7 +81,13 @@ const industries = [
   "まだ決まっていない／相談して決めたい",
 ];
 
-/** 必須項目（ヒアリング13項目のうち、空欄だと話が進まないもの） */
+/**
+ * 必須項目。
+ *
+ * contact（連絡先）は必須。ここが空だと、届いた相談に返信する手段が
+ * 何も残らないため。13項目は提携先のヒアリング項目だが、そこには
+ * 連絡先が含まれていないので、こちらで1項目足している。
+ */
 const requiredFields: (keyof FormState)[] = [
   "name",
   "age",
@@ -95,7 +101,12 @@ const requiredFields: (keyof FormState)[] = [
   "reason",
   "desiredIndustry",
   "isJobTypeMandatory",
+  "contact",
 ];
+
+/** 自由記述の上限。JSONPのURL長（実質8KB前後）に収めるための制限でもある。 */
+const REASON_MAX = 200;
+const NOTE_MAX = 300;
 
 const labels: Record<keyof FormState, string> = {
   name: "氏名",
@@ -111,9 +122,80 @@ const labels: Record<keyof FormState, string> = {
   reason: "転職理由",
   desiredIndustry: "希望業種・職種",
   isJobTypeMandatory: "希望職種は絶対条件か",
-  contact: "連絡先（任意）",
+  contact: "連絡先（メールアドレス）",
   note: "その他伝えたいこと（任意）",
 };
+
+/**
+ * Google Apps Script へ JSONP で送信する。
+ *
+ * なぜ fetch ではなく JSONP なのか：
+ * GAS のウェブアプリは /exec へのリクエストを script.googleusercontent.com へ
+ * 302 リダイレクトする。このリダイレクト先が Access-Control-Allow-Origin を
+ * 返さないため、fetch では以下のどちらかにしかならない。
+ *   - 通常モード → レスポンスを読めず reject。届いていても「失敗」と出る
+ *   - no-cors    → レスポンスが opaque。届いていなくても「成功」と出る
+ * どちらも「送信しました」の表示が実態と合わない。
+ *
+ * <script> タグによる読み込みは CORS の対象外でリダイレクトも追えるため、
+ * GAS 側が返したコールバックが実行されたことをもって
+ * 「サーバーに届いて処理された」と確実に判定できる。
+ *
+ * GAS 側の受け口は docs/marketing/gas-form-receiver.gs の doGet()。
+ */
+function sendViaJsonp(
+  endpoint: string,
+  payload: Record<string, string>,
+  timeoutMs = 20000,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const callbackName = `zeroichiFormCallback_${Date.now()}_${Math.floor(
+      Math.random() * 1e6,
+    )}`;
+    const script = document.createElement("script");
+    let settled = false;
+
+    const globals = window as unknown as Record<string, unknown>;
+
+    const cleanup = () => {
+      settled = true;
+      window.clearTimeout(timer);
+      delete globals[callbackName];
+      script.remove();
+    };
+
+    const timer = window.setTimeout(() => {
+      if (!settled) {
+        cleanup();
+        reject(new Error("timeout"));
+      }
+    }, timeoutMs);
+
+    globals[callbackName] = (response: { result?: string }) => {
+      if (settled) return;
+      cleanup();
+      if (response && response.result === "ok") {
+        resolve();
+      } else {
+        reject(new Error("rejected"));
+      }
+    };
+
+    // 読み込み自体に失敗（オフライン、URL間違い、デプロイが非公開など）
+    script.onerror = () => {
+      if (!settled) {
+        cleanup();
+        reject(new Error("network"));
+      }
+    };
+
+    const url = new URL(endpoint);
+    url.searchParams.set("callback", callbackName);
+    url.searchParams.set("payload", JSON.stringify(payload));
+    script.src = url.toString();
+    document.body.appendChild(script);
+  });
+}
 
 function buildMessage(form: FormState) {
   const lines = [
@@ -132,9 +214,9 @@ function buildMessage(form: FormState) {
     `11. 転職理由：${form.reason}`,
     `12. 希望業種：${form.desiredIndustry}`,
     `13. 希望職種は絶対条件か：${form.isJobTypeMandatory}`,
+    `14. 連絡先：${form.contact}`,
   ];
 
-  if (form.contact) lines.push("", `連絡先：${form.contact}`);
   if (form.note) lines.push("", `その他：${form.note}`);
 
   return lines.join("\n");
@@ -172,29 +254,11 @@ export function EntryForm() {
     if (site.formEndpoint) {
       setSendState("sending");
       try {
-        // Content-Type を text/plain にするのは意図的。
-        // application/json にすると CORS のプリフライト（OPTIONS）が飛ぶが、
-        // Google Apps Script は OPTIONS を処理できないため送信が失敗する。
-        // text/plain は単純リクエストとして扱われプリフライトが不要で、
-        // GAS 側は e.postData.contents をそのまま受け取れる。
-        //
-        // mode: "no-cors" も必須。GAS の /exec は script.googleusercontent.com へ
-        // 302 リダイレクトするが、そのリダイレクト先は Access-Control-Allow-Origin を
-        // 返さない。通常モードだとブラウザがレスポンスを読めず fetch が reject し、
-        // POST 自体は届いているのに「送信失敗」と表示されてしまう。
-        //
-        // 代償として、レスポンスは opaque になり成否を判定できない。
-        // したがって結果画面では「届いたはず」と断定せず、LINE・メールの
-        // 送信導線を必ず併記すること（下の結果セクション参照）。
-        await fetch(site.formEndpoint, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({ ...form, formatted: text }),
-        });
+        await sendViaJsonp(site.formEndpoint, { ...form, formatted: text });
         setSendState("sent");
       } catch {
-        // no-cors でも、通信自体が成立しない場合（オフライン等）はここに来る。
+        // 到達しなかった場合のみここに来る。
+        // 画面には正直に「送れていない」と出し、LINE・メールへ誘導する。
         setSendState("failed");
       }
     }
@@ -426,6 +490,7 @@ export function EntryForm() {
             value={form.reason}
             onChange={(event) => update("reason", event.target.value)}
             rows={4}
+            maxLength={REASON_MAX}
             placeholder="例）体力勝負の仕事ではなく、スキルを積み上げて長く働ける仕事に移りたい"
             className={fieldClass("reason")}
           />
@@ -467,32 +532,39 @@ export function EntryForm() {
           />
         </Field>
 
+        <Field
+          id="contact"
+          label="14. 連絡先（メールアドレス）"
+          required
+          hint="ご返信はこちら宛にお送りします。LINEでやり取りしたい方も、行き違いを防ぐため入力してください。"
+          error={errorFor("contact")}
+        >
+          <input
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            value={form.contact}
+            onChange={(event) => update("contact", event.target.value)}
+            placeholder="例）taro@example.com"
+            className={fieldClass("contact")}
+          />
+        </Field>
+
         <div className="rounded-2xl bg-ink-50 p-6">
           <p className="mb-5 text-sm font-bold text-ink-800">
             任意項目（あるとやり取りがスムーズです）
           </p>
 
-          <div className="space-y-6">
-            <Field id="contact" label="連絡先（LINE名・メールアドレスなど）">
-              <input
-                type="text"
-                value={form.contact}
-                onChange={(event) => update("contact", event.target.value)}
-                placeholder="例）LINE名：タロウ"
-                className={fieldClass("contact")}
-              />
-            </Field>
-
-            <Field id="note" label="その他、伝えておきたいこと">
-              <textarea
-                value={form.note}
-                onChange={(event) => update("note", event.target.value)}
-                rows={3}
-                placeholder="例）夜勤は難しい／扶養家族がいる／学習中の資格がある など"
-                className={fieldClass("note")}
-              />
-            </Field>
-          </div>
+          <Field id="note" label="その他、伝えておきたいこと">
+            <textarea
+              value={form.note}
+              onChange={(event) => update("note", event.target.value)}
+              rows={3}
+              maxLength={NOTE_MAX}
+              placeholder="例）夜勤は難しい／扶養家族がいる／学習中の資格がある など"
+              className={fieldClass("note")}
+            />
+          </Field>
         </div>
 
         <div className="rounded-2xl border border-ink-200 p-5 text-sm leading-relaxed text-ink-600">
@@ -533,14 +605,14 @@ export function EntryForm() {
         >
           <h2 className="text-xl font-bold text-ink-900">
             {sendState === "sent"
-              ? "送信しました"
+              ? "受け付けました"
               : "この内容をLINEで送ってください"}
           </h2>
           <p className="mt-2.5 text-sm text-ink-600">
             {sendState === "sent"
-              ? "入力内容を送信しました。確認のうえ折り返しご連絡します。なお、返信を確実にお受け取りいただくため、下のボタンからLINEの友だち追加（またはメール送信）もあわせてお願いします。"
+              ? `内容が届きました。${site.contact.replyTime}に、ご記入の連絡先へご返信します。LINEでやり取りしたい方は、下のボタンから友だち追加しておいてください。`
               : sendState === "failed"
-                ? "自動送信がうまくいきませんでした。お手数ですが、下のテキストをコピーしてLINEからお送りください。"
+                ? "送信できませんでした。お手数ですが、下のテキストをコピーして、LINEまたはメールでお送りください。"
                 : "下のテキストをコピーして、LINEに貼り付けて送信するだけで完了です。"}
           </p>
 
