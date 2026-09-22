@@ -633,13 +633,15 @@ export function EntryForm() {
           className="scroll-mt-24 rounded-3xl border-2 border-flame-200 bg-flame-50 p-6 sm:p-8"
         >
           <h2 className="text-xl font-bold text-ink-900">
-            {sendState === "sent" || sendState === "unconfirmed"
+            {sendState === "sent"
               ? "送信しました"
-              : "この内容をLINEで送ってください"}
+              : sendState === "unconfirmed"
+                ? "送信しました"
+                : "この内容をLINEで送ってください"}
           </h2>
           <p className="mt-2.5 text-sm text-ink-600">
             {sendState === "sent"
-              ? `内容が届きました。${site.contact.replyTime}に、ご記入の連絡先へご返信します。LINEでやり取りしたい方は、下のボタンから友だち追加しておいてください。`
+              ? `内容が届きました。${site.contact.replyTime}に、ご記入のメールアドレス宛にご返信します。このページを閉じていただいて構いません。`
               : sendState === "unconfirmed"
                 ? "送信は完了しましたが、こちらで受信の確認が取れませんでした。念のため、下のテキストをLINEかメールでもお送りいただけると確実です。"
                 : sendState === "failed"
@@ -647,38 +649,72 @@ export function EntryForm() {
                   : "下のテキストをコピーして、LINEに貼り付けて送信するだけで完了です。"}
           </p>
 
-          <pre className="mt-5 overflow-x-auto rounded-2xl bg-white p-5 text-sm leading-relaxed whitespace-pre-wrap text-ink-800">
+          {sendState === "sent" ? (
+            <p className="mt-6 mb-2 text-xs font-bold text-ink-500">
+              送信した内容（控え）
+            </p>
+          ) : null}
+
+          <pre
+            className={`overflow-x-auto rounded-2xl bg-white p-5 text-sm leading-relaxed whitespace-pre-wrap text-ink-800 ${
+              sendState === "sent" ? "" : "mt-5"
+            }`}
+          >
             {message}
           </pre>
 
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <button
-              type="button"
-              onClick={copy}
-              className="flex-1 rounded-full border border-ink-300 bg-white py-3.5 font-bold text-ink-700 transition hover:bg-ink-50"
-            >
-              {copied ? "コピーしました" : "テキストをコピー"}
-            </button>
-            <a
-              href={site.contact.lineUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 rounded-full bg-[#06c755] py-3.5 text-center font-bold text-white transition hover:brightness-95"
-            >
-              LINEを開いて送る
-            </a>
-          </div>
+          {/*
+            送信が成功した場合、やることはもう残っていない。
+            コピー・メール送信のボタンは「まだ何か送る必要がある」と
+            読めてしまうため出さない。LINEは任意の連絡手段として残す。
+          */}
+          {sendState === "sent" ? (
+            <div className="mt-6 rounded-2xl bg-white p-5">
+              <p className="text-sm text-ink-600">
+                LINEでのやり取りをご希望の方は、こちらから友だち追加できます（任意）。
+                電話やメールより気軽にやり取りできます。
+              </p>
+              <a
+                href={site.contact.lineUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 block rounded-full bg-[#06c755] py-3.5 text-center font-bold text-white transition hover:brightness-95"
+              >
+                LINEで相談する
+              </a>
+            </div>
+          ) : (
+            <>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={copy}
+                  className="flex-1 rounded-full border border-ink-300 bg-white py-3.5 font-bold text-ink-700 transition hover:bg-ink-50"
+                >
+                  {copied ? "コピーしました" : "テキストをコピー"}
+                </button>
+                <a
+                  href={site.contact.lineUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 rounded-full bg-[#06c755] py-3.5 text-center font-bold text-white transition hover:brightness-95"
+                >
+                  LINEを開いて送る
+                </a>
+              </div>
 
-          <a
-            href={mailtoHref}
-            className="mt-3 block rounded-full border border-ink-300 bg-white py-3.5 text-center font-bold text-ink-700 transition hover:bg-ink-50"
-          >
-            メールで送る
-          </a>
-          <p className="mt-2.5 text-center text-xs text-ink-500">
-            LINEを使っていない方はこちら。お使いのメールアプリが立ち上がり、
-            本文が入力済みの状態で開きます。
-          </p>
+              <a
+                href={mailtoHref}
+                className="mt-3 block rounded-full border border-ink-300 bg-white py-3.5 text-center font-bold text-ink-700 transition hover:bg-ink-50"
+              >
+                メールで送る
+              </a>
+              <p className="mt-2.5 text-center text-xs text-ink-500">
+                LINEを使っていない方はこちら。お使いのメールアプリが立ち上がり、
+                本文が入力済みの状態で開きます。
+              </p>
+            </>
+          )}
         </section>
       ) : null}
     </div>
