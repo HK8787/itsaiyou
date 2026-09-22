@@ -177,13 +177,24 @@ export function EntryForm() {
         // Google Apps Script は OPTIONS を処理できないため送信が失敗する。
         // text/plain は単純リクエストとして扱われプリフライトが不要で、
         // GAS 側は e.postData.contents をそのまま受け取れる。
+        //
+        // mode: "no-cors" も必須。GAS の /exec は script.googleusercontent.com へ
+        // 302 リダイレクトするが、そのリダイレクト先は Access-Control-Allow-Origin を
+        // 返さない。通常モードだとブラウザがレスポンスを読めず fetch が reject し、
+        // POST 自体は届いているのに「送信失敗」と表示されてしまう。
+        //
+        // 代償として、レスポンスは opaque になり成否を判定できない。
+        // したがって結果画面では「届いたはず」と断定せず、LINE・メールの
+        // 送信導線を必ず併記すること（下の結果セクション参照）。
         await fetch(site.formEndpoint, {
           method: "POST",
+          mode: "no-cors",
           headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify({ ...form, formatted: text }),
         });
         setSendState("sent");
       } catch {
+        // no-cors でも、通信自体が成立しない場合（オフライン等）はここに来る。
         setSendState("failed");
       }
     }
@@ -522,12 +533,12 @@ export function EntryForm() {
         >
           <h2 className="text-xl font-bold text-ink-900">
             {sendState === "sent"
-              ? "送信が完了しました"
+              ? "送信しました"
               : "この内容をLINEで送ってください"}
           </h2>
           <p className="mt-2.5 text-sm text-ink-600">
             {sendState === "sent"
-              ? "内容が担当者に届きました。折り返しご連絡します。LINEでもやり取りしたい場合は、下のボタンから友だち追加のうえ、このテキストを送ってください。"
+              ? "入力内容を送信しました。確認のうえ折り返しご連絡します。なお、返信を確実にお受け取りいただくため、下のボタンからLINEの友だち追加（またはメール送信）もあわせてお願いします。"
               : sendState === "failed"
                 ? "自動送信がうまくいきませんでした。お手数ですが、下のテキストをコピーしてLINEからお送りください。"
                 : "下のテキストをコピーして、LINEに貼り付けて送信するだけで完了です。"}
