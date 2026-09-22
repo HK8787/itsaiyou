@@ -1,0 +1,18 @@
+node_modules/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+.env
+.env.local
+.env*.local
+
+.DS_Store
+npm-debug.log*
+yarn-error.log*
+.vercel
+
+# 候補者の実データ（公開リポジトリなので絶対にコミットしないこと）
+docs/marketing/candidates-*.csv
+docs/marketing/candidates-*.xlsx

@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@theme {
+  /* ブランドカラー：信頼感のあるネイビー × 一歩踏み出す背中を押すオレンジ */
+  --color-ink-50: #f4f6fb;
+  --color-ink-100: #e6ebf5;
+  --color-ink-200: #c9d4e8;
+  --color-ink-300: #9daed1;
+  --color-ink-400: #6b7fae;
+  --color-ink-500: #46598b;
+  --color-ink-600: #33446e;
+  --color-ink-700: #253356;
+  --color-ink-800: #1a2440;
+  --color-ink-900: #111a2e;
+
+  --color-flame-50: #fff5ed;
+  --color-flame-100: #ffe8d5;
+  --color-flame-200: #ffcdaa;
+  --color-flame-300: #ffab74;
+  --color-flame-400: #ff7f3c;
+  --color-flame-500: #fb5e12;
+  --color-flame-600: #ec4508;
+  --color-flame-700: #c33209;
+  --color-flame-800: #9b2910;
+  --color-flame-900: #7d2510;
+
+  --color-line: #06c755;
+
+  --font-sans: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP",
+    "BIZ UDPGothic", Meiryo, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: #ffffff;
+    color: var(--color-ink-800);
+    font-family: var(--font-sans);
+    line-height: 1.85;
+    text-wrap: pretty;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1.4;
+    font-weight: 700;
+    text-wrap: balance;
+  }
+
+  /* 日本語では下線より色分けの方が読みやすいので、リンクは既定で下線なし */
+  a {
+    text-decoration: none;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-flame-500);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer utilities {
+  /* 縦書きの見出しなどで行末が揃わない日本語向けの微調整 */
+  .text-balance-ja {
+    text-wrap: balance;
+    word-break: auto-phrase;
+  }
+
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
