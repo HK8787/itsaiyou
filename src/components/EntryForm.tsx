@@ -139,15 +139,27 @@ const labels: Record<keyof FormState, string> = {
  *
  * <script> タグによる読み込みは CORS の対象外でリダイレクトも追えるため、
  * GAS 側が返したコールバックが実行されたことをもって
- * 「サーバーに届いて処理された」と確実に判定できる。
+ * 「サーバーに届いて処理された」と判定できる。
+ *
+ * ただしコールバックが必ず実行されるとは限らない。GAS がログインページや
+ * エラーHTMLを返した場合、それはJavaScriptとして解釈できず実行時エラーになるが、
+ * script 要素の onerror は発火しない（onerror は読み込み失敗時のみ）。
+ * そのため「読み込めたのにコールバックが来ない」状態がありえる。
+ * これを待ち続けると画面が「送信中…」のまま固まるので、3つの結果を返す。
+ *
+ *   confirmed   … コールバックが実行された。到達は確実
+ *   unconfirmed … 読み込めたがコールバックが来ない。到達したかは不明
+ *   （reject）  … 読み込み自体に失敗。到達していない
  *
  * GAS 側の受け口は docs/marketing/gas-form-receiver.gs の doGet()。
  */
+type SendOutcome = "confirmed" | "unconfirmed";
+
 function sendViaJsonp(
   endpoint: string,
   payload: Record<string, string>,
-  timeoutMs = 20000,
-): Promise<void> {
+  timeoutMs = 10000,
+): Promise<SendOutcome> {
   return new Promise((resolve, reject) => {
     const callbackName = `zeroichiFormCallback_${Date.now()}_${Math.floor(
       Math.random() * 1e6,
@@ -164,10 +176,11 @@ function sendViaJsonp(
       script.remove();
     };
 
+    // 何も起きないまま終わる場合の最終的な打ち切り。
     const timer = window.setTimeout(() => {
       if (!settled) {
         cleanup();
-        reject(new Error("timeout"));
+        resolve("unconfirmed");
       }
     }, timeoutMs);
 
@@ -175,10 +188,23 @@ function sendViaJsonp(
       if (settled) return;
       cleanup();
       if (response && response.result === "ok") {
-        resolve();
+        resolve("confirmed");
       } else {
+        // GAS まで届いたが、向こうで処理に失敗している。
         reject(new Error("rejected"));
       }
+    };
+
+    // 読み込みは成功。この時点でコールバックが未実行なら、
+    // 返ってきたのが JSONP ではなかったということ。
+    // 通常はスクリプト実行→コールバック→load の順なので、少しだけ待つ。
+    script.onload = () => {
+      window.setTimeout(() => {
+        if (!settled) {
+          cleanup();
+          resolve("unconfirmed");
+        }
+      }, 1500);
     };
 
     // 読み込み自体に失敗（オフライン、URL間違い、デプロイが非公開など）
@@ -227,7 +253,7 @@ export function EntryForm() {
   const [errors, setErrors] = useState<(keyof FormState)[]>([]);
   const [message, setMessage] = useState("");
   const [sendState, setSendState] = useState<
-    "idle" | "sending" | "sent" | "failed"
+    "idle" | "sending" | "sent" | "unconfirmed" | "failed"
   >("idle");
   const [copied, setCopied] = useState(false);
 
@@ -254,8 +280,11 @@ export function EntryForm() {
     if (site.formEndpoint) {
       setSendState("sending");
       try {
-        await sendViaJsonp(site.formEndpoint, { ...form, formatted: text });
-        setSendState("sent");
+        const outcome = await sendViaJsonp(site.formEndpoint, {
+          ...form,
+          formatted: text,
+        });
+        setSendState(outcome === "confirmed" ? "sent" : "unconfirmed");
       } catch {
         // 到達しなかった場合のみここに来る。
         // 画面には正直に「送れていない」と出し、LINE・メールへ誘導する。
@@ -604,16 +633,18 @@ export function EntryForm() {
           className="scroll-mt-24 rounded-3xl border-2 border-flame-200 bg-flame-50 p-6 sm:p-8"
         >
           <h2 className="text-xl font-bold text-ink-900">
-            {sendState === "sent"
-              ? "受け付けました"
+            {sendState === "sent" || sendState === "unconfirmed"
+              ? "送信しました"
               : "この内容をLINEで送ってください"}
           </h2>
           <p className="mt-2.5 text-sm text-ink-600">
             {sendState === "sent"
               ? `内容が届きました。${site.contact.replyTime}に、ご記入の連絡先へご返信します。LINEでやり取りしたい方は、下のボタンから友だち追加しておいてください。`
-              : sendState === "failed"
-                ? "送信できませんでした。お手数ですが、下のテキストをコピーして、LINEまたはメールでお送りください。"
-                : "下のテキストをコピーして、LINEに貼り付けて送信するだけで完了です。"}
+              : sendState === "unconfirmed"
+                ? "送信は完了しましたが、こちらで受信の確認が取れませんでした。念のため、下のテキストをLINEかメールでもお送りいただけると確実です。"
+                : sendState === "failed"
+                  ? "送信できませんでした。お手数ですが、下のテキストをコピーして、LINEまたはメールでお送りください。"
+                  : "下のテキストをコピーして、LINEに貼り付けて送信するだけで完了です。"}
           </p>
 
           <pre className="mt-5 overflow-x-auto rounded-2xl bg-white p-5 text-sm leading-relaxed whitespace-pre-wrap text-ink-800">
