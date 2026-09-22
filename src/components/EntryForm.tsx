@@ -217,6 +217,12 @@ export function EntryForm() {
       errors.includes(key) ? "border-flame-500 bg-flame-50" : "border-ink-200"
     }`;
 
+  // メールアプリを本文入力済みで開くリンク。
+  // 送信先の設定が一切不要で、LINEを使っていない人の受け皿になる。
+  const mailtoHref = `mailto:${site.contact.email}?subject=${encodeURIComponent(
+    `【キャリア相談】${form.name || "お名前未記入"}`,
+  )}&body=${encodeURIComponent(message)}`;
+
   return (
     <div className="space-y-10">
       <form onSubmit={handleSubmit} noValidate className="space-y-7">
@@ -548,6 +554,17 @@ export function EntryForm() {
               LINEを開いて送る
             </a>
           </div>
+
+          <a
+            href={mailtoHref}
+            className="mt-3 block rounded-full border border-ink-300 bg-white py-3.5 text-center font-bold text-ink-700 transition hover:bg-ink-50"
+          >
+            メールで送る
+          </a>
+          <p className="mt-2.5 text-center text-xs text-ink-500">
+            LINEを使っていない方はこちら。お使いのメールアプリが立ち上がり、
+            本文が入力済みの状態で開きます。
+          </p>
         </section>
       ) : null}
     </div>
