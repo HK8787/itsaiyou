@@ -19,22 +19,24 @@ OUT = "/home/user/itsaiyou/public/social"
 
 # ---------------------------------------------------------------- 配色
 # ここだけ差し替えればトーンを丸ごと変えられる。
+#
+# 白基調＋青のグラデーション。参考にしたサービスから配色の方向性のみを
+# 取っている（ロゴの意匠は模倣しない）。
 PALETTE = {
-    # 背景のグラデーション（上 → 下）
-    "bg_top": (0x25, 0x33, 0x56),      # ink-700
-    "bg_bottom": (0x11, 0x1A, 0x2E),   # ink-900
-    # ヘッダー背景（アイコンより少し明るく）
-    "header_top": (0x1A, 0x24, 0x40),  # ink-800
-    "header_bottom": (0x11, 0x1A, 0x2E),
+    # 濃色面のグラデーション（上 → 下）。深い青から明るい青へ。
+    "bg_top": (0x01, 0x3B, 0x9E),
+    "bg_bottom": (0x02, 0x7D, 0xDB),
+    # 淡色面
+    "light": (0xFF, 0xFF, 0xFF),
+    "light_sub": (0xF2, 0xF6, 0xFB),
     # 文字
-    "text": (0xFF, 0xFF, 0xFF),
-    "text_sub": (0x9D, 0xAE, 0xD1),    # ink-300
+    "text": (0xFF, 0xFF, 0xFF),        # 濃色面の上に置く文字
+    "text_dark": (0x28, 0x16, 0x13),   # 淡色面の上に置く文字（やや暖色の黒）
+    "text_sub": (0x6B, 0x7A, 0x90),    # 補足文
     # アクセント
-    "accent": (0xFB, 0x5E, 0x12),      # flame-500
-    "accent_light": (0xFF, 0x7F, 0x3C),  # flame-400
-    "accent_pale": (0xFF, 0xCD, 0xAA),  # flame-200
-    # 帯の影側
-    "band_dark": (0x25, 0x33, 0x56),   # ink-700
+    "accent": (0x02, 0x7D, 0xDB),
+    "accent_deep": (0x01, 0x3B, 0x9E),
+    "accent_light": (0x73, 0xBC, 0xED),
 }
 
 
@@ -111,22 +113,34 @@ def _wordmark(d, S, p, text_color, it_color, rule_color):
 
 
 def make_icon():
-    """400x400。紺地・白文字。"""
+    """400x400。青のグラデーション地・白文字。
+
+    Xのタイムラインは白背景なので、こちらを主に使うと埋もれない。
+    """
     S = 400
     p = PALETTE
     img = vertical_gradient((S, S), p["bg_top"], p["bg_bottom"])
     d = ImageDraw.Draw(img)
-    _wordmark(d, S, p, p["text"], p["accent_light"], p["accent"])
+    _wordmark(d, S, p, p["text"], p["text"], p["accent_light"])
     return img
 
 
 def make_icon_b():
-    """400x400。アクセント地・白文字。タイムラインで目立つ。"""
+    """400x400。白地・濃色文字。
+
+    白背景のサービス（noteなど）で使う。Xの明るいテーマだと
+    背景と同化するため、縁に細い枠を入れて輪郭を残している。
+    """
     S = 400
     p = PALETTE
-    img = Image.new("RGB", (S, S), p["accent"])
+    img = Image.new("RGB", (S, S), p["light"])
     d = ImageDraw.Draw(img)
-    _wordmark(d, S, p, p["text"], p["accent_pale"], p["text"])
+
+    ring = max(4, int(S * 0.022))
+    d.ellipse([ring / 2, ring / 2, S - ring / 2, S - ring / 2],
+              outline=p["accent"], width=ring)
+
+    _wordmark(d, S, p, p["text_dark"], p["accent"], p["accent"])
     return img
 
 
@@ -134,27 +148,32 @@ def make_icon_b():
 LEFT = 440  # プロフィール画像が重なる領域を避ける
 
 
-def stripes(d, W, H, p):
-    """右側の斜めの帯。"""
+def stripes(d, W, H, p, dark_bg):
+    """右側の斜めの帯。背景の明暗に応じて色を変える。"""
+    if dark_bg:
+        back, front = p["accent_deep"], p["accent_light"]
+    else:
+        back, front = p["accent_light"], p["accent"]
+
     d.polygon([(W * 0.70, H), (W * 0.83, 0), (W * 0.90, 0), (W * 0.77, H)],
-              fill=p["band_dark"])
+              fill=back)
     d.polygon([(W * 0.80, H), (W * 0.93, 0), (W * 1.02, 0), (W * 0.89, H)],
-              fill=p["accent"])
+              fill=front)
 
 
 def make_header():
-    """何をしている人かを説明する版。"""
+    """白地。キャリカミ寄りの明るいトーン。"""
     W, H = 1500, 500
     p = PALETTE
-    img = vertical_gradient((W, H), p["header_top"], p["header_bottom"])
+    img = vertical_gradient((W, H), p["light"], p["light_sub"])
     d = ImageDraw.Draw(img)
-    stripes(d, W, H, p)
+    stripes(d, W, H, p, dark_bg=False)
 
-    d.text((LEFT, H * 0.20), "ゼロイチIT", font=font(34), fill=p["accent_light"],
+    d.text((LEFT, H * 0.20), "ゼロイチIT", font=font(34), fill=p["accent"],
            anchor="lm")
-    d.text((LEFT, H * 0.43), "IT未経験の転職を、", font=font(58), fill=p["text"],
+    d.text((LEFT, H * 0.43), "IT未経験の転職を、", font=font(58), fill=p["text_dark"],
            anchor="lm")
-    d.text((LEFT, H * 0.63), "調べて書いています。", font=font(58), fill=p["text"],
+    d.text((LEFT, H * 0.63), "調べて書いています。", font=font(58), fill=p["text_dark"],
            anchor="lm")
     d.text((LEFT, H * 0.84), "高卒・専門卒・フリーター・異業種から　／　相談は無料",
            font=font(28), fill=p["text_sub"], anchor="lm")
@@ -163,18 +182,19 @@ def make_header():
 
 
 def make_header_b():
-    """コピーが主役の版。"""
+    """青地。コピーが主役の版。"""
     W, H = 1500, 500
     p = PALETTE
     img = vertical_gradient((W, H), p["bg_top"], p["bg_bottom"])
     d = ImageDraw.Draw(img)
-    stripes(d, W, H, p)
+    stripes(d, W, H, p, dark_bg=True)
 
-    d.text((LEFT, H * 0.22), "ゼロイチIT", font=font(32), fill=p["text_sub"],
+    d.text((LEFT, H * 0.22), "ゼロイチIT", font=font(32), fill=p["accent_light"],
            anchor="lm")
-    d.text((LEFT, H * 0.48), "「自分には無縁」を、", font=font(64), fill=p["text"],
-           anchor="lm")
-    d.text((LEFT, H * 0.70), "終わらせる。", font=font(64), fill=p["accent_light"],
+    # 青地の上では明るい青が沈む。強調したい2行目を白にする。
+    d.text((LEFT, H * 0.48), "「自分には無縁」を、", font=font(64),
+           fill=p["accent_light"], anchor="lm")
+    d.text((LEFT, H * 0.70), "終わらせる。", font=font(64), fill=p["text"],
            anchor="lm")
 
     return img
