@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Container } from "@/components/Container";
 import { EntryForm } from "@/components/EntryForm";
 import { LineButton } from "@/components/LineButton";
 import { PageHero } from "@/components/PageHero";
 import { site } from "@/data/site";
+
+// 静的書き出し＋サブディレクトリ配信のため、public/ の画像は
+// 自分で basePath を前置する必要がある。
+const basePath = process.env.BASE_PATH ?? "";
 
 export const metadata: Metadata = {
   title: "無料相談フォーム",
@@ -43,12 +48,27 @@ export default function EntryPage() {
             ))}
           </ul>
 
-          <div className="mt-9 rounded-3xl border border-ink-200 bg-white p-6 text-center sm:p-7">
-            <p className="text-sm text-ink-600">
+          <div className="mt-9 rounded-3xl border border-ink-200 bg-white p-6 sm:p-7">
+            <p className="text-center text-sm text-ink-600">
               フォームが面倒であれば、LINEで直接お話しいただいても大丈夫です。
             </p>
-            <div className="mt-4">
+
+            <div className="mt-5 flex flex-col items-center gap-6 sm:flex-row sm:justify-center sm:gap-8">
               <LineButton note={`返信の目安：${site.contact.replyTime}`} />
+
+              <div className="flex flex-col items-center">
+                <Image
+                  src={`${basePath}/line-qr.png`}
+                  alt={`${site.name}のLINE友だち追加用QRコード`}
+                  width={132}
+                  height={132}
+                  className="rounded-xl"
+                  unoptimized
+                />
+                <p className="mt-2 text-xs text-ink-500">
+                  パソコンの方はこちらを読み取り
+                </p>
+              </div>
             </div>
           </div>
 
