@@ -155,49 +155,85 @@ def stripes(d, W, H, p, dark_bg):
     else:
         back, front = p["accent_light"], p["accent"]
 
-    d.polygon([(W * 0.70, H), (W * 0.83, 0), (W * 0.90, 0), (W * 0.77, H)],
+    # 見出しと重ならないよう右端に寄せている。値を小さくすると文字にかかる。
+    d.polygon([(W * 0.80, H), (W * 0.93, 0), (W * 0.99, 0), (W * 0.86, H)],
               fill=back)
-    d.polygon([(W * 0.80, H), (W * 0.93, 0), (W * 1.02, 0), (W * 0.89, H)],
+    d.polygon([(W * 0.89, H), (W * 1.02, 0), (W * 1.10, 0), (W * 0.97, H)],
               fill=front)
 
 
-def make_header():
-    """白地。キャリカミ寄りの明るいトーン。"""
+def _header_base(p, dark):
+    """ヘッダーの下地。帯まで引いた状態で返す。"""
     W, H = 1500, 500
-    p = PALETTE
-    img = vertical_gradient((W, H), p["light"], p["light_sub"])
+    if dark:
+        img = vertical_gradient((W, H), p["bg_top"], p["bg_bottom"])
+    else:
+        img = vertical_gradient((W, H), p["light"], p["light_sub"])
     d = ImageDraw.Draw(img)
-    stripes(d, W, H, p, dark_bg=False)
+    stripes(d, W, H, p, dark_bg=dark)
+    return img, d, W, H
 
-    d.text((LEFT, H * 0.20), "ゼロイチIT", font=font(34), fill=p["accent"],
-           anchor="lm")
-    d.text((LEFT, H * 0.43), "IT未経験の転職を、", font=font(58), fill=p["text_dark"],
-           anchor="lm")
-    d.text((LEFT, H * 0.63), "調べて書いています。", font=font(58), fill=p["text_dark"],
-           anchor="lm")
-    d.text((LEFT, H * 0.84), "高卒・専門卒・フリーター・異業種から　／　相談は無料",
-           font=font(28), fill=p["text_sub"], anchor="lm")
+
+def _header(copy1, copy2, sub, dark=False, size=58):
+    """見出し2行＋補足1行のヘッダー。
+
+    文言だけ差し替えて使う。レイアウトは共通。
+    見出しは右の帯にかからないよう、長い文言では自動で縮む。
+    """
+    p = PALETTE
+    img, d, W, H = _header_base(p, dark)
+
+    brand = p["accent_light"] if dark else p["accent"]
+    body = p["text"] if dark else p["text_dark"]
+    sub_color = p["accent_light"] if dark else p["text_sub"]
+
+    # 帯の左端（W*0.80）の手前で折り返す
+    avail = W * 0.80 - LEFT - 24
+    f = font(size)
+    while size > 30 and max(d.textlength(c, font=f) for c in (copy1, copy2)) > avail:
+        size -= 2
+        f = font(size)
+
+    d.text((LEFT, H * 0.20), "ゼロイチIT", font=font(34), fill=brand, anchor="lm")
+    d.text((LEFT, H * 0.43), copy1, font=f, fill=body, anchor="lm")
+    d.text((LEFT, H * 0.63), copy2, font=f, fill=body, anchor="lm")
+
+    f_sub = font(27)
+    while d.textlength(sub, font=f_sub) > avail + 40:
+        f_sub = font(f_sub.size - 1)
+    d.text((LEFT, H * 0.84), sub, font=f_sub, fill=sub_color, anchor="lm")
 
     return img
+
+
+SUB = "高卒・専門卒・フリーター・異業種から　／　相談は何度でも無料"
+
+
+def make_header():
+    """A案：サイトのヒーローと同じ問いかけ。
+
+    サイト・OGPと同じ一文にすることで、Xから来た人が
+    「同じところに来た」と分かる。
+    """
+    return _header("「自分なんて、IT業界とは", "無縁だ」と思っている人へ。", SUB)
 
 
 def make_header_b():
-    """青地。コピーが主役の版。"""
-    W, H = 1500, 500
-    p = PALETTE
-    img = vertical_gradient((W, H), p["bg_top"], p["bg_bottom"])
-    d = ImageDraw.Draw(img)
-    stripes(d, W, H, p, dark_bg=True)
+    """B案：ひとりで抱えなくていい、という寄り添い方。"""
+    return _header("ひとりで決めなくて、いい。", "IT未経験の転職、一緒に考えます。",
+                   "高卒・専門卒・フリーター歓迎　／　しつこい連絡はしません",
+                   size=54)
 
-    d.text((LEFT, H * 0.22), "ゼロイチIT", font=font(32), fill=p["accent_light"],
-           anchor="lm")
-    # 青地の上では明るい青が沈む。強調したい2行目を白にする。
-    d.text((LEFT, H * 0.48), "「自分には無縁」を、", font=font(64),
-           fill=p["accent_light"], anchor="lm")
-    d.text((LEFT, H * 0.70), "終わらせる。", font=font(64), fill=p["text"],
-           anchor="lm")
 
-    return img
+def make_header_c():
+    """C案：踏み出す手前で止まっている人への呼びかけ。"""
+    return _header("学歴で諦める前に、", "一度だけ話してみませんか。", SUB)
+
+
+def make_header_d():
+    """D案：A案の青地版。"""
+    return _header("「自分なんて、IT業界とは", "無縁だ」と思っている人へ。", SUB,
+                   dark=True)
 
 
 if __name__ == "__main__":
@@ -208,6 +244,8 @@ if __name__ == "__main__":
         "x-icon-b": make_icon_b(),
         "x-header": make_header(),
         "x-header-b": make_header_b(),
+        "x-header-c": make_header_c(),
+        "x-header-d": make_header_d(),
     }
     for name, im in files.items():
         im.save(f"{OUT}/{name}.png")
