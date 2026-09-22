@@ -13,8 +13,12 @@ export const site = {
   description:
     "高卒・専門卒・フリーター・異業種からのIT転職に特化した無料キャリア相談窓口。インフラエンジニア／WEBエンジニア／Salesforceエンジニアの3ルートから、あなたに合った一歩目を一緒に決めます。相談は何度でも無料。",
 
-  /** 公開予定のURL（OGPやサイトマップに使用）★TODO: 独自ドメインが決まったら差し替え */
-  url: "https://example.com",
+  /**
+   * 公開URL（OGP・サイトマップ・robots.txt に使用）。
+   * 独自ドメインを繋いだらそのドメインに差し替えること。
+   * あわせて .github/workflows/deploy.yml の BASE_PATH も "" にする。
+   */
+  url: "https://hk8787.github.io/itsaiyou",
 
   /** 問い合わせ導線 */
   contact: {
