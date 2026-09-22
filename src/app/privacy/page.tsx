@@ -120,6 +120,10 @@ export default function PrivacyPage() {
                 <dd className="text-ink-700">{site.contact.email}</dd>
               </div>
             </dl>
+            <p className="mt-4 text-sm leading-relaxed text-ink-600">
+              個人情報保護法にもとづき開示すべき運営者の氏名および住所は、
+              ご請求があり次第、上記の連絡先より遅滞なく回答します。
+            </p>
           </div>
         </Container>
       </section>
