@@ -7,9 +7,11 @@ import { prefectures, site } from "@/data/site";
  * 提携先の事前ヒアリング13項目をそのまま入力できるフォーム。
  *
  * 送信の挙動：
- *  - NEXT_PUBLIC_FORM_ENDPOINT が設定されていれば、そのURLへPOSTします。
- *  - 未設定の場合は送信を行わず、LINEに貼り付けられる整形済みテキストを生成します。
- * どちらの場合も、入力内容をこのサイトのサーバーに保存することはありません。
+ *  - NEXT_PUBLIC_FORM_ENDPOINT が設定されていれば、そのURLへPOSTします
+ *    （Google Apps Script 経由でスプレッドシートとメールに届く）。
+ *  - 未設定の場合は送信を行わず、LINEに貼り付けられる整形済みテキストのみ生成します。
+ * いずれの場合も、このサイト自体はサーバーを持たないため、
+ * 入力内容がサイト側に残ることはない。送信先は上記エンドポイントのみ。
  */
 
 type FormState = {
@@ -170,9 +172,14 @@ export function EntryForm() {
     if (site.formEndpoint) {
       setSendState("sending");
       try {
+        // Content-Type を text/plain にするのは意図的。
+        // application/json にすると CORS のプリフライト（OPTIONS）が飛ぶが、
+        // Google Apps Script は OPTIONS を処理できないため送信が失敗する。
+        // text/plain は単純リクエストとして扱われプリフライトが不要で、
+        // GAS 側は e.postData.contents をそのまま受け取れる。
         await fetch(site.formEndpoint, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify({ ...form, formatted: text }),
         });
         setSendState("sent");
@@ -472,12 +479,11 @@ export function EntryForm() {
         </div>
 
         <div className="rounded-2xl border border-ink-200 p-5 text-sm leading-relaxed text-ink-600">
-          入力内容は
-          <strong className="text-ink-800">
-            このサイトのサーバーには保存されません
-          </strong>
-          。送信ボタンを押すと、LINEでそのまま送れる形に整形して表示します。
-          お預かりした情報は、提携先の職業紹介事業者へおつなぎする目的にのみ使用します。
+          送信いただいた内容は
+          <strong className="text-ink-800">運営者にのみ送信・保管されます</strong>
+          。お預かりした情報は、ご相談への回答と、ご希望があった場合に提携先の
+          職業紹介事業者へおつなぎする目的にのみ使用します。
+          ご本人の同意なく第三者へ提供することはありません。
           詳細は
           <a href="/privacy/" className="text-flame-600 underline">
             プライバシーポリシー
@@ -509,15 +515,16 @@ export function EntryForm() {
           className="scroll-mt-24 rounded-3xl border-2 border-flame-200 bg-flame-50 p-6 sm:p-8"
         >
           <h2 className="text-xl font-bold text-ink-900">
-            この内容をLINEで送ってください
+            {sendState === "sent"
+              ? "送信が完了しました"
+              : "この内容をLINEで送ってください"}
           </h2>
           <p className="mt-2.5 text-sm text-ink-600">
-            下のテキストをコピーして、LINEに貼り付けて送信するだけで完了です。
             {sendState === "sent"
-              ? "（担当者への送信も完了しました）"
+              ? "内容が担当者に届きました。折り返しご連絡します。LINEでもやり取りしたい場合は、下のボタンから友だち追加のうえ、このテキストを送ってください。"
               : sendState === "failed"
-                ? "（自動送信に失敗したため、お手数ですがLINEでお送りください）"
-                : ""}
+                ? "自動送信がうまくいきませんでした。お手数ですが、下のテキストをコピーしてLINEからお送りください。"
+                : "下のテキストをコピーして、LINEに貼り付けて送信するだけで完了です。"}
           </p>
 
           <pre className="mt-5 overflow-x-auto rounded-2xl bg-white p-5 text-sm leading-relaxed whitespace-pre-wrap text-ink-800">

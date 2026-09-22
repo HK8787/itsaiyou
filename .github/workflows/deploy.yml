@@ -37,6 +37,12 @@ jobs:
           # 独自ドメインを繋いだら（例 https://zeroichi-it.com ）、
           # ルート配信になるのでこの行を BASE_PATH: "" に変えること。
           BASE_PATH: /itsaiyou
+          # 相談フォームの送信先（Google Apps Script のウェブアプリURL）。
+          # リポジトリの Settings → Secrets and variables → Actions → Variables で
+          # FORM_ENDPOINT を登録すると有効になる。未登録なら送信せず、
+          # LINE貼り付け用テキストの生成のみになる。
+          # 手順: docs/marketing/form-setup.md
+          NEXT_PUBLIC_FORM_ENDPOINT: ${{ vars.FORM_ENDPOINT }}
         run: npm run build
 
       # Pages は既定で Jekyll 処理を挟まないが、念のため無効化しておく

@@ -19,7 +19,7 @@ IT業界の情報提供と初期相談を行い、提携先の有料職業紹介
 | --- | --- |
 | `contact.lineUrl` | ✅ 設定済み |
 | `url` | ✅ 設定済み（GitHub Pages。独自ドメイン取得時は要変更） |
-| `contact.email` | ⚠️ **未設定**。下記のとおり必須です |
+| `contact.email` | ✅ 設定済み |
 | `operator.name` / `name` / `tagline` | 屋号。変えたい場合のみ |
 
 ### 運営者の氏名・住所について
@@ -107,49 +107,28 @@ BASE_PATH=/itsaiyou npm run build
 
 ## 4. 相談フォームの送信先（任意）
 
-`/entry` のフォームは、既定では **どこにも送信せず**、
-13項目を整形したテキストを画面に表示してコピーできるようにするだけです。
-利用者はそれをLINEに貼り付けて送ります（入力内容はサーバーに保存されません）。
+`/entry` のフォームは、`NEXT_PUBLIC_FORM_ENDPOINT` が設定されていれば
+その送信先へPOSTします。未設定の場合は送信せず、13項目を整形したテキストを
+画面に表示してコピーできるようにするだけです（利用者がLINEに貼り付けて送る）。
 
-入力内容を自分宛てに自動送信したい場合は、`.env.local` に送信先を設定してください。
+**セットアップ手順は `docs/marketing/form-setup.md` にまとめてあります。**
+貼り付けるスクリプトは `docs/marketing/gas-form-receiver.gs` です。
+
+送信先を設定する場合、ローカルでは `.env.local` に、
+GitHub Pages では リポジトリの Settings → Secrets and variables → Actions →
+Variables に `FORM_ENDPOINT` を登録してください。
 
 ```bash
 NEXT_PUBLIC_FORM_ENDPOINT=https://script.google.com/macros/s/xxxxx/exec
 ```
 
-Google Apps Script（スプレッドシートに追記する例）：
-
-```javascript
-function doPost(e) {
-  const data = JSON.parse(e.postData.contents);
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  sheet.appendRow([
-    new Date(),
-    data.name,
-    data.age,
-    data.education,
-    data.desiredPrefecture,
-    data.desiredMonth,
-    data.employmentStatus,
-    data.lastEmploymentType,
-    data.tenure,
-    data.jobChangeCount,
-    data.residence,
-    data.reason,
-    data.desiredIndustry,
-    data.isJobTypeMandatory,
-    data.contact,
-    data.note,
-  ]);
-  return ContentService.createTextOutput("ok");
-}
-```
-
 デプロイ時は「アクセスできるユーザー：全員」で公開してください。
 Formspree などのフォームサービスのURLをそのまま指定することもできます。
 
-> 個人情報を外部サービスに保存することになるため、
-> プライバシーポリシー（`src/app/privacy/page.tsx`）の記載と実態が合っているか確認してください。
+> フォームの送信先を設定すると、入力内容が外部（Googleおよび運営者のメール）に
+> 保管されることになります。サイトの記載はすでに実態に合わせてあります
+> （`/privacy` の第2項、`/entry`、`src/data/faq.ts`）。
+> 送信先を Formspree など別のサービスに変える場合は、これらの記載も合わせて見直してください。
 
 ---
 
