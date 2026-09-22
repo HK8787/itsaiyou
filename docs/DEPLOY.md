@@ -47,10 +47,12 @@ Actions タブ → 「Deploy to GitHub Pages」 → 「Run workflow」。
 | `contact.lineUrl` | プレースホルダ | **未設定だと集客しても1件も取れません** |
 | `contact.email` | example@example.com | 問い合わせ窓口の表示 |
 | `url` | https://example.com | OGP・サイトマップ |
-| `operator.*` | 空欄 | 運営者情報の表示 |
+| `operator.name` | ゼロイチIT | 屋号。変えたい場合のみ |
 
-とくに **LINE URL と運営者情報** は空欄のまま公開しないでください。
-運営者不明のサイトは、求職者から見ていちばん信用できません。
+運営者の氏名・住所はサイトに常時掲載せず、請求があり次第メールで回答する運用です
+（個人情報保護法32条1項の括弧書きが認める方式）。
+**この運用は窓口が実際に機能していることが前提なので、`contact.email` は
+必ず受信・返信できるアドレスにしてください。**
 
 `url` は当面 `https://hk8787.github.io/itsaiyou` で構いません。
 

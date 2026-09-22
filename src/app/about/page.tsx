@@ -217,8 +217,6 @@ export default function AboutPage() {
             {[
               ["サイト名", site.name],
               [site.operator.label, site.operator.name],
-              ["代表者", site.operator.representative],
-              ["所在地", site.operator.address],
               ["業務内容", site.operator.role],
               ["連絡先", site.contact.email],
             ].map(([label, value]) => (
@@ -231,6 +229,11 @@ export default function AboutPage() {
               </div>
             ))}
           </dl>
+
+          <p className="mt-4 text-sm leading-relaxed text-ink-600">
+            運営者の氏名および住所は、ご請求があり次第、上記の連絡先より遅滞なく回答します。
+            お気軽にお問い合わせください。
+          </p>
 
           <h2 className="mt-16 text-xl font-bold text-ink-900 sm:text-2xl">
             掲載情報について
