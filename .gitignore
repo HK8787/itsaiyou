@@ -12,3 +12,7 @@ next-env.d.ts
 npm-debug.log*
 yarn-error.log*
 .vercel
+
+# 候補者の実データ（公開リポジトリなので絶対にコミットしないこと）
+docs/marketing/candidates-*.csv
+docs/marketing/candidates-*.xlsx
