@@ -11,7 +11,7 @@ export function CtaBand({
   lead?: string;
 }) {
   return (
-    <section className="bg-ink-900 py-16 sm:py-20">
+    <section className="bg-deep py-16 sm:py-20">
       <Container size="narrow">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-white sm:text-3xl text-balance-ja">
