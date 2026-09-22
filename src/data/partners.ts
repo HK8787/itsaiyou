@@ -44,7 +44,9 @@ export const partners: Partner[] = [
     licenseLabel: "有料職業紹介事業許可番号",
     licenseNumber: "13-ユ-316640",
     address: "東京都新宿区四谷三栄町9-6 四谷三栄町スクエア6F",
-    representative: "代表社員 堀口 裕基",
+    // 代表者名は実在の個人名にあたるため、公開リポジトリには置かない。
+    // 掲載する場合は公開直前に、一次情報で確認したうえで入れること。
+    representative: "",
     site: "https://humantalent-ml.com",
   },
   {

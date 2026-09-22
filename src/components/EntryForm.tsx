@@ -218,7 +218,7 @@ export function EntryForm() {
             type="text"
             value={form.name}
             onChange={(event) => update("name", event.target.value)}
-            placeholder="木本 英"
+            placeholder="山田 太郎"
             autoComplete="name"
             className={fieldClass("name")}
           />
@@ -454,7 +454,7 @@ export function EntryForm() {
                 type="text"
                 value={form.contact}
                 onChange={(event) => update("contact", event.target.value)}
-                placeholder="例）LINE名：ひで"
+                placeholder="例）LINE名：タロウ"
                 className={fieldClass("contact")}
               />
             </Field>
