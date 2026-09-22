@@ -39,6 +39,10 @@ export const site = {
    * 送信されるとスプレッドシートに1行追記され、contact.email に通知メールが届く。
    * スクリプトは docs/marketing/gas-form-receiver.gs、手順は同 form-setup.md。
    *
+   * サイト側は JSONP（<script>タグ）で doGet を呼ぶ。GAS は CORS ヘッダを
+   * 返さないため fetch では到達を判定できないのが理由。詳細は
+   * src/components/EntryForm.tsx の sendViaJsonp() のコメントを参照。
+   *
    * このURLは秘匿情報ではない。NEXT_PUBLIC_ の値はどのみちブラウザに
    * 配信されるため、環境変数にしてもソースに書いても露出度は変わらない。
    * 読み手にとって分かりやすい方を選んでここに直接置いている。
@@ -49,7 +53,7 @@ export const site = {
    */
   formEndpoint:
     process.env.NEXT_PUBLIC_FORM_ENDPOINT ||
-    "https://script.google.com/macros/s/AKfycbxvNOyJMX886RQsZ4ISxLexr6YHldGL-8L0RCxxAG6QAfozKfuoUDmlhWD7a6RqGC3L/exec",
+    "https://script.google.com/macros/s/AKfycbygMJun9kow9VNim356HCv0O24gxMMEQ742PLYRkQPRPUcWi4Fu0oHxejjQ776VcHbx/exec",
 
   /**
    * 運営者情報。
