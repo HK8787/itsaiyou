@@ -216,23 +216,28 @@ export function Diagnosis() {
           </p>
         </div>
 
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-8">
           <Link
             href={`/courses/#${result.best.slug}`}
-            className="flex-1 rounded-full bg-ink-900 py-3.5 text-center font-bold text-white transition hover:bg-ink-800"
+            className="block rounded-full bg-ink-900 py-3.5 text-center font-bold text-white transition hover:bg-ink-800"
           >
             {result.best.short}ルートを詳しく見る
-          </Link>
-          <Link
-            href="/entry/"
-            className="flex-1 rounded-full border border-ink-300 py-3.5 text-center font-bold text-ink-700 transition hover:bg-ink-50"
-          >
-            この結果を相談する
           </Link>
         </div>
 
         <div className="mt-6 text-center">
-          <LineButton note="診断結果を見ながら、LINEで直接ご相談いただけます" />
+          <LineButton
+            block
+            note="診断結果を見ながら、LINEで直接ご相談いただけます"
+          >
+            この結果をLINEで相談する
+          </LineButton>
+          <Link
+            href="/entry/"
+            className="mt-4 inline-block text-sm text-ink-500 underline underline-offset-4"
+          >
+            フォームから送りたい方はこちら
+          </Link>
         </div>
 
         <button

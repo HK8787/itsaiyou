@@ -24,7 +24,7 @@ export default function NotFound() {
               href="/entry/"
               className="rounded-full border border-ink-300 px-7 py-3.5 font-bold text-ink-700"
             >
-              無料相談フォーム
+              無料で相談する
             </Link>
           </div>
         </div>
