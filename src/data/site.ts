@@ -67,7 +67,9 @@ export const site = {
    *
    * 環境変数 NEXT_PUBLIC_CF_BEACON_TOKEN でも上書きできる。
    */
-  analyticsToken: process.env.NEXT_PUBLIC_CF_BEACON_TOKEN || "",
+  analyticsToken:
+    process.env.NEXT_PUBLIC_CF_BEACON_TOKEN ||
+    "85fa8ff7aba3483cabbaa2de4066e33c",
 
   /**
    * 運営者情報。
