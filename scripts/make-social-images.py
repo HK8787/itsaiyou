@@ -209,6 +209,47 @@ def make_header_b():
     return _header(COPY1, COPY2, SUB, dark=True)
 
 
+def make_note_header():
+    """noteのヘッダー。1920x1006。
+
+    Xの1500x500（3:1）をそのまま使うと、noteが縦に引き伸ばして
+    文字だけが巨大に表示される。比率が違うので専用に作る。
+
+    noteはアイコンをヘッダーの下端左に重ねるので、
+    下側と左端には文字を置かない。
+    """
+    W, H = 1920, 1006
+    p = PALETTE
+    img = vertical_gradient((W, H), p["light"], p["light_sub"])
+    d = ImageDraw.Draw(img)
+
+    # 右側の帯。Xヘッダーと同じ意匠だが、縦長なので角度を寝かせる。
+    d.polygon([(W * 0.74, H), (W * 0.90, 0), (W * 0.97, 0), (W * 0.81, H)],
+              fill=p["accent_light"])
+    d.polygon([(W * 0.84, H), (W * 1.00, 0), (W * 1.09, 0), (W * 0.93, H)],
+              fill=p["accent"])
+
+    LEFT_N = 150
+    mark = 62
+    mark_y = H * 0.24 - mark / 2
+    d.rounded_rectangle([LEFT_N, mark_y, LEFT_N + mark, mark_y + mark],
+                        radius=mark * 0.25, fill=p["accent"])
+    stairs(d, LEFT_N, mark_y, mark, p["light"], sw=5.0)
+    d.text((LEFT_N + mark + 18, H * 0.24), "ゼロイチIT", font=font(44),
+           fill=p["accent"], anchor="lm")
+
+    d.text((LEFT_N, H * 0.46), COPY1, font=font(76), fill=p["text_dark"],
+           anchor="lm")
+    d.text((LEFT_N, H * 0.60), COPY2, font=font(76), fill=p["text_dark"],
+           anchor="lm")
+
+    # 下端はアイコンが重なるので、補足行はその手前で止める
+    d.text((LEFT_N, H * 0.74), SUB, font=font(34), fill=p["text_sub"],
+           anchor="lm")
+
+    return img
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
 
@@ -217,6 +258,7 @@ if __name__ == "__main__":
         "x-icon-b": make_icon_b(),
         "x-header": make_header(),
         "x-header-b": make_header_b(),
+        "note-header": make_note_header(),
     }
     for name, im in files.items():
         im.save(f"{OUT}/{name}.png")
