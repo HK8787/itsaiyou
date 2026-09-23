@@ -676,8 +676,6 @@ export function EntryForm() {
               </p>
               <a
                 href={site.contact.lineUrl}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="mt-4 block rounded-full bg-[#06c755] py-3.5 text-center font-bold text-white transition hover:brightness-95"
               >
                 LINEで相談する
@@ -695,8 +693,6 @@ export function EntryForm() {
                 </button>
                 <a
                   href={site.contact.lineUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="flex-1 rounded-full bg-[#06c755] py-3.5 text-center font-bold text-white transition hover:brightness-95"
                 >
                   LINEを開いて送る
