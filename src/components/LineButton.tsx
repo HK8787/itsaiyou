@@ -17,6 +17,17 @@ function LineGlyph({ className = "" }: { className?: string }) {
   );
 }
 
+/**
+ * LINE公式アカウントの友だち追加ボタン。
+ *
+ * target="_blank" は付けないこと。
+ * LINEやXのアプリ内ブラウザでは、新しいタブを開いてからアプリへ
+ * 受け渡す動作がブロックされやすく、タップしても何も起きない、
+ * あるいは空白のタブが開くだけ、という症状になる。
+ * 同じタブで遷移させれば、OSがLINEアプリへ引き渡してくれる。
+ *
+ * サイト内の他のLINEリンク（Header / StickyCta / EntryForm）も同様。
+ */
 export function LineButton({
   children = "LINEで無料相談する",
   size = "md",
@@ -37,8 +48,6 @@ export function LineButton({
     <div className={block ? "w-full" : "inline-block"}>
       <a
         href={site.contact.lineUrl}
-        target="_blank"
-        rel="noopener noreferrer"
         className={`inline-flex items-center justify-center rounded-full bg-[#06c755] font-bold text-white shadow-lg shadow-[#06c755]/25 transition hover:brightness-95 active:scale-[0.99] ${sizing} ${
           block ? "w-full" : ""
         }`}

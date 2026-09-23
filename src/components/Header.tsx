@@ -35,8 +35,6 @@ export function Header() {
           ))}
           <a
             href={site.contact.lineUrl}
-            target="_blank"
-            rel="noopener noreferrer"
             className="rounded-full bg-[#06c755] px-5 py-2.5 text-sm font-bold text-white transition hover:brightness-95"
           >
             LINEで無料相談
@@ -88,8 +86,6 @@ export function Header() {
           </ul>
           <a
             href={site.contact.lineUrl}
-            target="_blank"
-            rel="noopener noreferrer"
             onClick={() => setOpen(false)}
             className="mt-5 block rounded-full bg-[#06c755] py-3.5 text-center font-bold text-white"
           >

@@ -8,8 +8,6 @@ export function StickyCta() {
       <div className="mx-auto max-w-md">
         <a
           href={site.contact.lineUrl}
-          target="_blank"
-          rel="noopener noreferrer"
           className="block rounded-full bg-[#06c755] py-3.5 text-center font-bold text-white"
         >
           LINEで無料相談する
