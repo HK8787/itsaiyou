@@ -81,15 +81,17 @@ export const site = {
    * 秘匿情報ではない（どのみちHTMLに出る）。所有権の証明にしか使えず、
    * これだけでアカウントに何かできるものではない。
    *
-   * 入れ方は2通り。どちらでもよい。
-   *   1. リポジトリの Settings → Secrets and variables → Actions → Variables に
-   *      GOOGLE_SITE_VERIFICATION を登録する（コード変更が要らない）
-   *   2. 下の "" に直接書く
+   * プロパティは URLプレフィックス型で https://hk8787.github.io/itsaiyou/ を登録済み。
+   * ドメイン型は github.io のDNSを触れないため使えない。
+   *
+   * 環境変数 NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION でも上書きできる。
+   * （Actions の Variables に GOOGLE_SITE_VERIFICATION を登録すると効く）
    *
    * 手順の全体は docs/marketing/search-console.md。
    */
   googleSiteVerification:
-    process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
+    process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
+    "HRxvXW1roNuLW7EuHy_rJYoQSVN2n1yaZYMuq4kYjyo",
 
   /**
    * 運営者情報。

@@ -63,35 +63,37 @@ https://hk8787.github.io/itsaiyou/
 ```
 
 **必要なのは `content="..."` の中身だけ**です。タグ全体ではありません。
-この文字列をコピーして、次のどちらかで設定します。
 
-#### 方法A：GitHubの設定画面で入れる（コード変更なし・推奨）
+> **このサイトは設定済みです。**
+> トークンは `src/data/site.ts` の `googleSiteVerification` に入っています。
+> 以下は、再取得が必要になった場合や、独自ドメインに移して
+> プロパティを取り直す場合のための手順です。
 
-1. リポジトリの **Settings** → 左メニューの **Secrets and variables** → **Actions**
+コピーした文字列は、次のどちらかで設定します。
+
+#### 方法A：コードに直接書く（このサイトで採用）
+
+`src/data/site.ts` の `googleSiteVerification` の文字列を差し替えてコミットする。
+mainにマージすれば自動でデプロイされます。
+
+#### 方法B：GitHubの設定画面で入れる
+
+1. リポジトリの **Settings** → **Secrets and variables** → **Actions**
 2. 上のタブで **Variables** を選ぶ（Secretsではありません）
 3. **New repository variable**
 4. Name に `GOOGLE_SITE_VERIFICATION`、Value にコピーした文字列
-5. **Add variable**
 
-#### 方法B：コードに直接書く
-
-`src/data/site.ts` の `googleSiteVerification` の `""` の中に貼ってコミットする。
+この場合、登録しただけでは反映されません。
+**Actions** タブ → **Deploy to GitHub Pages** → **Run workflow** で
+ビルドし直してください。
 
 > このトークンは秘匿情報ではありません。どのみちHTMLに出力されて誰でも見られます。
-> 所有権の証明にしか使えず、これだけで何かできるものではないので、
-> Secretsではなく Variables で構いません。
+> 所有権の証明にしか使えないので、Secretsにする必要はありません。
 
 ### ステップ3：デプロイする
 
-方法Aの場合、Variableを登録しただけではサイトに反映されません。
-ビルドし直す必要があります。
-
-- リポジトリの **Actions** タブ → 左の **Deploy to GitHub Pages**
-- 右の **Run workflow** → ブランチは `main` → 緑の **Run workflow**
-
-2〜3分で終わります。緑のチェックが付いたら完了です。
-
-方法Bの場合は、mainにマージした時点で自動で走ります。
+mainにマージすると、Actionsが自動で走ります。2〜3分です。
+**Actions** タブで緑のチェックが付いたら完了です。
 
 反映されたかどうかは、`https://hk8787.github.io/itsaiyou/` を開いて
 ページのソースを表示し、`google-site-verification` を検索すれば分かります。
