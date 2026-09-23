@@ -9,8 +9,47 @@ import { site } from "@/data/site";
 export const metadata: Metadata = {
   title: "このサイトについて",
   description:
-    "運営者の立場、提携先との関係、どこからお金が出ているのか。安心して相談していただくために、仕組みをすべて公開しています。",
+    "運営者の経歴と立場、提携先との関係、どこからお金が出ているのか。安心して相談していただくために、仕組みをすべて公開しています。",
 };
+
+/**
+ * 運営者の経歴。
+ *
+ * このサイトの読者は「自分にIT業界なんて無縁だ」と思っている人なので、
+ * 資格や肩書きより「同じところから来た」という事実のほうが効く。
+ * だから調理の期間を削らず、最初に置いている。
+ */
+const career = [
+  {
+    period: "3年半",
+    title: "調理の仕事",
+    body: "IT業界のことは、ほとんど何も知りませんでした。今このページを読んでいる方と、同じ側にいたということです。",
+  },
+  {
+    period: "未経験で転職",
+    title: "IT業界へ",
+    body: "業界の知識がないまま飛び込みました。何が分からないのかも分からない状態から始まっています。",
+  },
+  {
+    period: "うち約1年はリーダー",
+    title: "ヘルプデスク",
+    body: "メンバーを見る立場にもいたので、未経験で入った人がどこでつまずくかは一通り見てきました。",
+  },
+  {
+    period: "現職・IT歴4年",
+    title: "SAPコンサルタント",
+    body: "業務システム側の仕事をしています。",
+  },
+];
+
+const licenses = [
+  "応用情報技術者",
+  "基本情報技術者",
+  "ITパスポート",
+  "G検定",
+  "Google広告認定",
+  "調理師",
+];
 
 const roles = [
   {
@@ -58,6 +97,58 @@ export default function AboutPage() {
               厚生労働大臣の許可を受けた提携先へおつなぎすることまでです。
               求人のご紹介、企業への推薦、面接調整、雇用条件の提示、入社手続きは、
               すべて許可を受けた提携先が責任をもって行います。
+            </p>
+          </div>
+
+          <h2 className="mt-16 text-xl font-bold text-ink-900 sm:text-2xl">
+            運営者について
+          </h2>
+          <p className="mt-4 text-[0.95rem] leading-relaxed text-ink-700">
+            もともと調理の仕事をしていました。IT業界とは縁のないところから、
+            未経験で入っています。
+          </p>
+
+          <ol className="mt-6 space-y-3">
+            {career.map((step) => (
+              <li
+                key={step.title}
+                className="rounded-2xl border border-ink-200 p-5"
+              >
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <span className="text-base font-bold text-ink-900">
+                    {step.title}
+                  </span>
+                  <span className="rounded-full bg-flame-50 px-2.5 py-0.5 text-xs font-bold text-flame-600">
+                    {step.period}
+                  </span>
+                </div>
+                <p className="mt-2 text-sm leading-relaxed text-ink-700">
+                  {step.body}
+                </p>
+              </li>
+            ))}
+          </ol>
+
+          <div className="mt-6 rounded-3xl border border-ink-200 bg-ink-50 p-7">
+            <p className="text-sm font-bold text-ink-500">保有資格</p>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {licenses.map((license) => (
+                <li
+                  key={license}
+                  className="rounded-full border border-ink-200 bg-white px-3 py-1 text-sm text-ink-700"
+                >
+                  {license}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-5 text-[0.95rem] leading-relaxed text-ink-700">
+              あわせてお伝えしておくと、
+              <strong className="text-ink-900">
+                開発エンジニア（コードを書く仕事）の経験はありません。
+              </strong>
+              ヘルプデスクやインフラまわりの話は自分が見てきたこととして、
+              WEB系の開発職については調べた事実としてお伝えします。
+              そこは分けて話します。
             </p>
           </div>
 
