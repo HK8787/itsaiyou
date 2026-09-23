@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Logo } from "@/components/Logo";
 import { navigation, site } from "@/data/site";
 
 export function Header() {
@@ -9,21 +10,24 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-ink-100 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5 sm:px-8">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-6 px-5 sm:px-8">
         <Link
           href="/"
-          className="flex items-baseline gap-2"
+          className="flex shrink-0 items-center gap-2.5"
           onClick={() => setOpen(false)}
         >
-          <span className="text-xl font-bold tracking-tight text-ink-900">
-            {site.name}
-          </span>
-          <span className="hidden text-xs text-ink-500 sm:inline">
-            {site.tagline}
+          <Logo className="h-8 w-8 shrink-0" />
+          <span className="flex items-baseline gap-2">
+            <span className="text-xl font-bold tracking-tight text-ink-900">
+              {site.name}
+            </span>
+            <span className="hidden text-xs whitespace-nowrap text-ink-500 2xl:inline">
+              {site.tagline}
+            </span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex">
+        <nav className="hidden shrink-0 items-center gap-7 whitespace-nowrap lg:flex">
           {navigation.map((item) => (
             <Link
               key={item.href}

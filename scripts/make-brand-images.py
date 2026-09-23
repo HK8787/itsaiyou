@@ -98,33 +98,28 @@ def make_ogp():
 def make_icon():
     """512x512。ファビコンとApple touch icon。
 
-    小さく表示されるので「ゼロイチ」だけ。IT まで入れると潰れる。
+    src/components/Logo.tsx と同じ上り階段のマーク。形を変えるときは両方直す。
+
+    16pxまで縮むので、文字は入れない。角丸も付けない。
+    ブラウザもiOSも外形を勝手に整えるため、全面に描いたほうがマークを
+    大きく取れて、小さいサイズでの視認性が上がる。
     """
     S = 512
     img = diagonal_gradient((S, S), DEEP_FROM, DEEP_TO)
     d = ImageDraw.Draw(img)
 
-    f = font(int(S * 0.23))
-    d.text((S / 2, S * 0.44), "ゼロイチ", font=f, fill=WHITE, anchor="mm")
+    # Logo.tsx の viewBox(32) の座標をそのまま拡大する
+    k = S / 32
+    # 段は2つ。3段にすると16pxで潰れて稲妻のように見える。
+    stroke = int(round(5.4 * k))
+    pts = [(8, 23.5), (15, 23.5), (15, 16), (22, 16), (22, 8.5)]
+    pts = [(x * k, y * k) for x, y in pts]
 
-    w = d.textlength("ゼロイチ", font=f)
-    stroke = int(S * 0.022)
-    d.line([(S / 2 - w / 2, S * 0.60), (S / 2 + w / 2, S * 0.60)],
-           fill=ACCENT_LIGHT, width=stroke)
-
-    # IT は線で描く。IPAゴシックの I はセリフ付きで「工」に見えるため。
-    h = S * 0.15
-    top, bottom = S * 0.74 - h / 2, S * 0.74 + h / 2
-    t_w = h * 0.74
-    gap = h * 0.30
-    total = stroke + gap + t_w
-    x = S / 2 - total / 2
-    d.line([(x + stroke / 2, top), (x + stroke / 2, bottom)], fill=WHITE,
-           width=stroke)
-    tx = x + stroke + gap + t_w / 2
-    d.line([(tx - t_w / 2, top + stroke / 2), (tx + t_w / 2, top + stroke / 2)],
-           fill=WHITE, width=stroke)
-    d.line([(tx, top), (tx, bottom)], fill=WHITE, width=stroke)
+    d.line(pts, fill=WHITE, width=stroke, joint="curve")
+    # 線端を丸める（PILのlineは端が角のままなので、両端に円を置く）
+    r = stroke / 2
+    for x, y in (pts[0], pts[-1]):
+        d.ellipse([x - r, y - r, x + r, y + r], fill=WHITE)
 
     return img
 

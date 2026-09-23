@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Container } from "@/components/Container";
+import { Logo } from "@/components/Logo";
 import { disclosePartners, partners } from "@/data/partners";
 import { navigation, site } from "@/data/site";
 
@@ -9,7 +10,10 @@ export function Footer() {
       <Container>
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr]">
           <div>
-            <p className="text-lg font-bold text-ink-900">{site.name}</p>
+            <div className="flex items-center gap-2.5">
+              <Logo className="h-7 w-7 shrink-0" />
+              <p className="text-lg font-bold text-ink-900">{site.name}</p>
+            </div>
             <p className="mt-1 text-sm text-ink-600">{site.tagline}</p>
             <p className="mt-5 max-w-md text-sm leading-relaxed text-ink-600">
               高卒・専門卒・フリーター・異業種から、IT業界の一歩目を踏み出す方の相談窓口です。
