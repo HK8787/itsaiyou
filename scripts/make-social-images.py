@@ -4,7 +4,8 @@
 
 設計上の制約
   アイコン : Xでは円形に切り抜かれ、タイムラインでは32〜48pxまで縮む。
-             和文4文字が限界なので「ゼロイチ」＋「IT」の2段組みにする。
+             その大きさで和文は読めないので、文字を入れずマークだけにする。
+             名前は表示名が担当する。マークは Logo.tsx と同じ形。
   ヘッダー : 1500x500。スマホでは上下が切られ、
              左下にアイコンが重なるため、文字は x>=440 に置く。
 """
@@ -64,72 +65,43 @@ def fit_font(d, text, target_w, start, min_size=10):
 
 
 # ---------------------------------------------------------------- アイコン
-def draw_it(d, cx, cy, h, color, stroke):
-    """「IT」を線で描く。
+def stairs(d, x, y, size, color, sw=5.4):
+    """上り階段のマーク。
 
-    IPAゴシックの I はセリフ付きで、ロゴに置くと「工」に見えてしまう。
-    ジオメトリックに描いたほうがワードマークとして締まる。
+    src/components/Logo.tsx と同じ形。viewBox 32 の座標をそのまま拡大する。
+    段を2つに留めているのは、3段だと小さいサイズで潰れて
+    稲妻のように見えるため。
     """
-    stroke = int(round(stroke))
-    top, bottom = cy - h / 2, cy + h / 2
-    t_w = h * 0.74          # T の横棒の幅
-    gap = h * 0.30          # I と T の間隔
-    total = stroke + gap + t_w
-    x = cx - total / 2
-
-    # I（縦棒のみ）
-    ix = x + stroke / 2
-    d.line([(ix, top), (ix, bottom)], fill=color, width=stroke)
-
-    # T
-    tx = x + stroke + gap + t_w / 2
-    d.line([(tx - t_w / 2, top + stroke / 2), (tx + t_w / 2, top + stroke / 2)],
-           fill=color, width=stroke)
-    d.line([(tx, top), (tx, bottom)], fill=color, width=stroke)
-
-
-def _wordmark(d, S, p, text_color, it_color, rule_color):
-    """「ゼロイチ」＋ルール＋「IT」を縦に積む。
-
-    円形に切り抜かれるため、横幅は直径の 70% 程度に抑える。
-    """
-    inner = S * 0.70
-
-    f_main = fit_font(d, "ゼロイチ", inner, int(S * 0.24))
-
-    d.text((S / 2, S * 0.40), "ゼロイチ", font=f_main, fill=text_color, anchor="mm")
-
-    # 区切りの横線。文字幅にそろえる。
-    main_w = d.textlength("ゼロイチ", font=f_main)
-    stroke = max(3, int(S * 0.020))
-    y_rule = S * 0.565
-    d.line(
-        [(S / 2 - main_w / 2, y_rule), (S / 2 + main_w / 2, y_rule)],
-        fill=rule_color,
-        width=stroke,
-    )
-
-    draw_it(d, S / 2, S * 0.715, S * 0.15, it_color, stroke)
+    k = size / 32
+    stroke = int(round(sw * k))
+    pts32 = [(8, 23.5), (15, 23.5), (15, 16), (22, 16), (22, 8.5)]
+    pts = [(x + px * k, y + py * k) for px, py in pts32]
+    d.line(pts, fill=color, width=stroke, joint="curve")
+    # PILのlineは端が角のままなので、両端に円を置いて丸める
+    r = stroke / 2
+    for px, py in (pts[0], pts[-1]):
+        d.ellipse([px - r, py - r, px + r, py + r], fill=color)
 
 
 def make_icon():
-    """400x400。青のグラデーション地・白文字。
+    """400x400。青のグラデーション地・白いマーク。
 
-    Xのタイムラインは白背景なので、こちらを主に使うと埋もれない。
+    Xのタイムラインでは32〜48pxまで縮む。その大きさで和文は読めないので、
+    文字は入れずマークだけにする。名前は表示名が担当する。
     """
     S = 400
     p = PALETTE
     img = vertical_gradient((S, S), p["bg_top"], p["bg_bottom"])
     d = ImageDraw.Draw(img)
-    _wordmark(d, S, p, p["text"], p["text"], p["accent_light"])
+    stairs(d, 0, 0, S, p["text"])
     return img
 
 
 def make_icon_b():
-    """400x400。白地・濃色文字。
+    """400x400。白地・青いマーク。
 
-    白背景のサービス（noteなど）で使う。Xの明るいテーマだと
-    背景と同化するため、縁に細い枠を入れて輪郭を残している。
+    白背景のサービスで使う。Xの明るいテーマだと背景と同化するため、
+    縁に枠を入れて輪郭を残している。
     """
     S = 400
     p = PALETTE
@@ -139,8 +111,7 @@ def make_icon_b():
     ring = max(4, int(S * 0.022))
     d.ellipse([ring / 2, ring / 2, S - ring / 2, S - ring / 2],
               outline=p["accent"], width=ring)
-
-    _wordmark(d, S, p, p["text_dark"], p["accent"], p["accent"])
+    stairs(d, 0, 0, S, p["accent"])
     return img
 
 
@@ -194,7 +165,18 @@ def _header(copy1, copy2, sub, dark=False, size=58):
         size -= 2
         f = font(size)
 
-    d.text((LEFT, H * 0.20), "ゼロイチIT", font=font(34), fill=brand, anchor="lm")
+    # 屋号の左にマークを置く。サイト・アイコンと同じ形にして、
+    # どの媒体で見ても同じブランドだと分かるようにする。
+    mark = 46
+    mark_y = H * 0.20 - mark / 2
+    d.rounded_rectangle([LEFT, mark_y, LEFT + mark, mark_y + mark],
+                        radius=mark * 0.25,
+                        fill=p["accent"] if not dark else p["accent_light"])
+    stairs(d, LEFT, mark_y, mark,
+           p["light"] if not dark else p["bg_top"], sw=5.0)
+
+    d.text((LEFT + mark + 14, H * 0.20), "ゼロイチIT", font=font(34),
+           fill=brand, anchor="lm")
     d.text((LEFT, H * 0.43), copy1, font=f, fill=body, anchor="lm")
     d.text((LEFT, H * 0.63), copy2, font=f, fill=body, anchor="lm")
 
