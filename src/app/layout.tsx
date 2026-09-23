@@ -43,6 +43,12 @@ export const metadata: Metadata = {
     images: [ogImage],
   },
   robots: { index: true, follow: true },
+
+  // Search Console の所有権確認。site.googleSiteVerification が空なら
+  // meta タグ自体を出力しない。設定手順は docs/marketing/search-console.md。
+  verification: site.googleSiteVerification
+    ? { google: site.googleSiteVerification }
+    : undefined,
 };
 
 export default function RootLayout({

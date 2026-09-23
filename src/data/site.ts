@@ -72,6 +72,28 @@ export const site = {
     "85fa8ff7aba3483cabbaa2de4066e33c",
 
   /**
+   * Google Search Console の所有権確認トークン。
+   *
+   * 空のあいだは <meta name="google-site-verification"> を出力しない。
+   * 値を入れると全ページの <head> に出るので、Search Console の
+   * 「HTMLタグ」方式で所有権を確認できる。
+   *
+   * 秘匿情報ではない（どのみちHTMLに出る）。所有権の証明にしか使えず、
+   * これだけでアカウントに何かできるものではない。
+   *
+   * プロパティは URLプレフィックス型で https://hk8787.github.io/itsaiyou/ を登録済み。
+   * ドメイン型は github.io のDNSを触れないため使えない。
+   *
+   * 環境変数 NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION でも上書きできる。
+   * （Actions の Variables に GOOGLE_SITE_VERIFICATION を登録すると効く）
+   *
+   * 手順の全体は docs/marketing/search-console.md。
+   */
+  googleSiteVerification:
+    process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
+    "HRxvXW1roNuLW7EuHy_rJYoQSVN2n1yaZYMuq4kYjyo",
+
+  /**
    * 運営者情報。
    *
    * 氏名と住所はサイトに常時掲載していません。
