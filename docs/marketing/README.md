@@ -85,7 +85,6 @@
 - [x] LINE公式アカウント開設 → 友だち追加URLを `site.ts` に反映
 - [x] 相談フォームの送信先を設定（docs/marketing/form-setup.md）
 - [x] アクセス解析を有効化（docs/marketing/analytics-setup.md）
-- [ ] 提携先に確認（docs/marketing/partner-questions.md の文面B）
 - [ ] 知恵袋アカウント作成 → プロフィールにサイトURL
 - [ ] Xアカウント作成 → プロフィールと固定ポストを設定
 
@@ -157,7 +156,7 @@
 
 **提携先**
 
-- `partner-questions.md` … 提携先への確認事項と送信用の文面
+- `partner-questions.md` … 提携先へ事前確認しない方針とその前提。方針を変える場合の文面も収録
 
 **設定**
 
