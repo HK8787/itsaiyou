@@ -26,6 +26,25 @@ noteで読んだ人が、より詳しい情報を求めてサイトに来る形�
 
 ## 投稿の設定
 
+### 見出し画像
+
+記事4本分を用意してあります。投稿画面の「画像をアップロード」から選んでください。
+
+| 記事 | ファイル |
+|---|---|
+| 1. 最初に知るべきだったこと | `public/social/note/01-job-map.png` |
+| 2. 1年目の手取り | `public/social/note/02-money.png` |
+| 3. 「やめとけ」を検証 | `public/social/note/03-yametoke.png` |
+| 4. 「なぜIT業界なのか」 | `public/social/note/04-why-it.png` |
+
+デプロイ後は `https://hk8787.github.io/itsaiyou/social/note/01-job-map.png`
+のようなURLでも取得できます（ファイル名を差し替え）。
+
+記事を足したときは `scripts/make-note-eyecatch.py` の `ARTICLES` に
+1行足して実行すれば、同じ体裁で作れます。
+
+### その他の設定
+
 | 項目 | 設定 |
 |---|---|
 | 記事の種類 | テキスト |
