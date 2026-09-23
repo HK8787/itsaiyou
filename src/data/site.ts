@@ -72,6 +72,26 @@ export const site = {
     "85fa8ff7aba3483cabbaa2de4066e33c",
 
   /**
+   * Google Search Console の所有権確認トークン。
+   *
+   * 空のあいだは <meta name="google-site-verification"> を出力しない。
+   * 値を入れると全ページの <head> に出るので、Search Console の
+   * 「HTMLタグ」方式で所有権を確認できる。
+   *
+   * 秘匿情報ではない（どのみちHTMLに出る）。所有権の証明にしか使えず、
+   * これだけでアカウントに何かできるものではない。
+   *
+   * 入れ方は2通り。どちらでもよい。
+   *   1. リポジトリの Settings → Secrets and variables → Actions → Variables に
+   *      GOOGLE_SITE_VERIFICATION を登録する（コード変更が要らない）
+   *   2. 下の "" に直接書く
+   *
+   * 手順の全体は docs/marketing/search-console.md。
+   */
+  googleSiteVerification:
+    process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
+
+  /**
    * 運営者情報。
    *
    * 氏名と住所はサイトに常時掲載していません。

@@ -120,8 +120,13 @@
 - [x] LINE公式アカウント開設 → 友だち追加URLを `site.ts` に反映
 - [x] 相談フォームの送信先を設定（docs/marketing/form-setup.md）
 - [x] アクセス解析を有効化（docs/marketing/analytics-setup.md）
+- [ ] **Search Consoleに登録 → サイトマップ送信**（docs/marketing/search-console.md）
 - [ ] 知恵袋アカウント作成 → プロフィールにサイトURL
 - [ ] Xアカウント作成 → プロフィールと固定ポストを設定
+
+Search Consoleが未登録のあいだは、「ゼロイチIT」で検索しても
+サイトが出てきません。知恵袋やXで屋号を見た人が検索して何も出ないのは
+機会損失なので、ここを先に潰してください。15分で終わります。
 
 ### Week 2〜12：毎日まわす
 
@@ -200,6 +205,7 @@
 - `form-setup.md` … 相談フォームの送信先（Google Apps Script）の設定手順
 - `gas-form-receiver.gs` … 上記に貼り付けるスクリプト本体
 - `analytics-setup.md` … アクセス解析（Cloudflare Web Analytics）の設定手順
+- `search-console.md` … Google Search Consoleの登録とサイトマップ送信の手順
 
 **管理**
 

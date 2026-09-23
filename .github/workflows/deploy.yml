@@ -43,6 +43,11 @@ jobs:
           # LINE貼り付け用テキストの生成のみになる。
           # 手順: docs/marketing/form-setup.md
           NEXT_PUBLIC_FORM_ENDPOINT: ${{ vars.FORM_ENDPOINT }}
+          # Google Search Console の所有権確認トークン。
+          # 同じく Variables に GOOGLE_SITE_VERIFICATION を登録すると、
+          # 全ページの <head> に meta タグが出る。未登録なら何も出力しない。
+          # 手順: docs/marketing/search-console.md
+          NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: ${{ vars.GOOGLE_SITE_VERIFICATION }}
         run: npm run build
 
       # Pages は既定で Jekyll 処理を挟まないが、念のため無効化しておく
