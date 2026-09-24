@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Container } from "@/components/Container";
-import { LineButton } from "@/components/LineButton";
+import { LineButton, LineIdNote } from "@/components/LineButton";
 import { site } from "@/data/site";
 
 export function CtaBand({
@@ -26,6 +26,9 @@ export function CtaBand({
             <p className="mt-5 text-sm text-ink-200">
               返信の目安：{site.contact.replyTime}
             </p>
+            <div className="mt-3">
+              <LineIdNote tone="light" />
+            </div>
             <Link
               href="/entry/"
               className="mt-6 text-sm text-ink-300 underline underline-offset-4 transition hover:text-white"

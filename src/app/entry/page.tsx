@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Container } from "@/components/Container";
 import { EntryForm } from "@/components/EntryForm";
-import { LineButton } from "@/components/LineButton";
+import { LineButton, LineIdNote } from "@/components/LineButton";
 import { PageHero } from "@/components/PageHero";
 import { site } from "@/data/site";
 
@@ -56,6 +56,9 @@ export default function EntryPage() {
                   block
                   note={`返信の目安：${site.contact.replyTime}`}
                 />
+                <div className="mt-3">
+                  <LineIdNote />
+                </div>
               </div>
 
               <div className="flex shrink-0 flex-col items-center">
