@@ -62,6 +62,30 @@ export function LineButton({
   );
 }
 
+/**
+ * ボタンが効かなかったときの逃げ道。
+ *
+ * アプリ内ブラウザ（知恵袋・note・X）からだと、lin.ee のリンクが
+ * LINEアプリを起動できないことがある。そのとき、これがないと詰む。
+ *
+ * IDは select-all にしてあるので、タップ一回で全選択できる。
+ * ボタンより目立たせないこと。主導線はあくまでボタン。
+ */
+export function LineIdNote({ tone = "dark" }: { tone?: "dark" | "light" }) {
+  const colors =
+    tone === "light"
+      ? "text-ink-300 [&_b]:text-white"
+      : "text-ink-500 [&_b]:text-ink-800";
+
+  return (
+    <p className={`text-center text-xs leading-relaxed ${colors}`}>
+      ボタンが反応しないときは、LINEで{" "}
+      <b className="select-all font-bold">{site.contact.lineId}</b>{" "}
+      を検索してください
+    </p>
+  );
+}
+
 export function GhostLink({
   href,
   children,
