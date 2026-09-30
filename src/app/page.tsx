@@ -8,6 +8,7 @@ import { courses } from "@/data/courses";
 import { faqs } from "@/data/faq";
 import { guides } from "@/data/guides";
 import { jobs } from "@/data/jobs";
+import { otherJobExamples, partnerSupport } from "@/data/support";
 
 const worries = [
   "高卒だから、募集要項の「大卒以上」で毎回止まる",
@@ -24,8 +25,8 @@ const promises = [
     body: "相談から入社まで、あなたの負担はゼロ円です。職業紹介の費用は採用した企業側が負担する仕組みのため、求職者から手数料をいただくことはありません（職業安定法により原則禁止されています）。",
   },
   {
-    title: "無理に勧めません",
-    body: "話を伺った結果、今はITより別の道のほうがいいと思えば、正直にそう言います。入社後すぐ辞めてしまうのは、お互いにとって損だからです。判断材料を増やすつもりで使ってください。",
+    title: "ITを無理に勧めません",
+    body: "話を伺った結果、ITより別の道のほうが合うと思えば、正直にそう言います。そのうえでIT以外の正社員求人も探せるので、相談が無駄になることはありません。入社後すぐ辞めてしまうのは、お互いにとって損だからです。",
   },
   {
     title: "しんどい部分も先に話します",
@@ -52,7 +53,7 @@ const steps = [
   {
     no: "04",
     title: "提携エージェントへおつなぎ",
-    body: "求人紹介と選考は、許可を受けた提携先が担当。面接対策はこちらでも並走します。",
+    body: "求人紹介と選考は、許可を受けた提携先の専任チームが担当。書類の添削や模擬面接まで対応してもらえます。",
   },
 ];
 
@@ -75,7 +76,7 @@ export default function HomePage() {
         <Container className="relative py-20 sm:py-28">
           <div className="max-w-3xl">
             <p className="inline-flex items-center rounded-full border border-white/25 px-4 py-1.5 text-xs font-bold tracking-wide text-flame-200 sm:text-sm">
-              学歴不問・IT未経験専門のキャリア相談窓口
+              学歴不問・IT未経験に強いキャリア相談窓口
             </p>
 
             <h1 className="mt-7 text-3xl leading-[1.35] font-bold text-white sm:text-4xl md:text-[3.1rem] md:leading-[1.3] text-balance-ja">
@@ -106,7 +107,7 @@ export default function HomePage() {
               {[
                 { value: "0円", label: "相談・紹介の費用" },
                 { value: "学歴不問", label: "扱う求人の中心" },
-                { value: "3ルート", label: "未経験からの入口" },
+                { value: "全国", label: "対応エリア" },
                 { value: "何度でも", label: "相談の回数制限" },
               ].map((stat) => (
                 <div key={stat.label}>
@@ -250,6 +251,42 @@ export default function HomePage() {
         </Container>
       </section>
 
+      {/*
+        IT以外。
+        3ルートの直後に置いて「ITが合わなかったら終わり」ではないことを示す。
+        職種は例であって、求人の有無は地域と時期で変わる。
+        そこを曖昧にすると約束したことになるので、注記は消さないこと。
+      */}
+      <section className="pb-20 sm:pb-24">
+        <Container>
+          <div className="rounded-[2rem] border border-ink-200 bg-ink-50 px-6 py-10 sm:px-10 sm:py-12">
+            <SectionHeading
+              eyebrow="Other jobs"
+              title="ITにこだわらなくても大丈夫です"
+              lead="話してみて「やっぱりITじゃないかも」と思っても、そこで終わりではありません。提携先は職種を問わず正社員の求人を扱っているので、IT以外も並べて比べられます。"
+            />
+
+            <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {otherJobExamples.map((job) => (
+                <li
+                  key={job.title}
+                  className="rounded-2xl border border-ink-200 bg-white p-6"
+                >
+                  <h3 className="font-bold text-ink-900">{job.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-600">
+                    {job.body}
+                  </p>
+                </li>
+              ))}
+            </ul>
+
+            <p className="mx-auto mt-8 max-w-3xl text-center text-xs leading-relaxed text-ink-500">
+              {"上は相談の多い方向の一例です。出ている求人は地域と時期によって変わるので、ご希望を伺ったうえで、あるかないかを正直にお伝えします。"}
+            </p>
+          </div>
+        </Container>
+      </section>
+
       {/* 3つの約束 */}
       <section className="bg-ink-50 py-20 sm:py-24">
         <Container>
@@ -319,6 +356,43 @@ export default function HomePage() {
               </li>
             ))}
           </ol>
+
+          {/*
+            おつなぎした先で何をしてもらえるか。
+            出典は提携先の紹介文（src/data/support.ts）。
+            「全国20万件以上」は提携先の公表値なので、出典の注記を外さないこと。
+          */}
+          <div className="mt-14 rounded-[2rem] border-2 border-flame-200 bg-flame-50 px-6 py-10 sm:px-10">
+            <h3 className="text-center text-xl font-bold text-ink-900 sm:text-2xl">
+              おつなぎした先で、やってもらえること
+            </h3>
+            <p className="mx-auto mt-4 max-w-2xl text-center text-sm leading-relaxed text-ink-600">
+              {"求人の紹介から入社までを担当するのは、厚生労働大臣の許可を受けた提携先です。当窓口からおつなぎした方は、次のサポートを受けられます。"}
+            </p>
+
+            <ul className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {partnerSupport.strengths.map((item) => (
+                <li
+                  key={item.title}
+                  className="rounded-2xl bg-white p-6 ring-1 ring-flame-100"
+                >
+                  <p className="flex items-center gap-2 font-bold text-ink-900">
+                    <span className="text-emerald-600" aria-hidden>
+                      ✓
+                    </span>
+                    {item.title}
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-600">
+                    {item.body}
+                  </p>
+                </li>
+              ))}
+            </ul>
+
+            <p className="mt-6 text-center text-xs text-ink-500">
+              求人件数は{partnerSupport.jobCountNote}です。
+            </p>
+          </div>
         </Container>
       </section>
 
