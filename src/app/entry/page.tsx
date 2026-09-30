@@ -13,7 +13,7 @@ const basePath = process.env.BASE_PATH ?? "";
 export const metadata: Metadata = {
   title: "無料相談フォーム",
   description:
-    "IT未経験からの転職相談フォーム。13項目にお答えいただくと、LINEでそのまま送れる形に整形します。相談は何度でも無料、費用の負担はありません。",
+    "未経験からの転職相談フォーム（IT以外の職種もご相談いただけます）。13項目にお答えいただくと、LINEでそのまま送れる形に整形します。相談は何度でも無料、費用の負担はありません。",
 };
 
 const points = [
