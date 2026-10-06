@@ -49,6 +49,14 @@ export function Footer() {
               </li>
               <li>
                 <Link
+                  href="/ichini/"
+                  className="text-ink-600 hover:text-flame-600"
+                >
+                  2回目以降の転職の方（イチニキャリア）
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/privacy/"
                   className="text-ink-600 hover:text-flame-600"
                 >

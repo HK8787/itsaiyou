@@ -14,6 +14,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/faq/",
     "/entry/",
     "/about/",
+    // イチニキャリア（2回目・3回目の転職向け）
+    "/ichini/",
+    "/ichini/shindan/",
+    "/ichini/jobs/",
   ];
 
   const paths = [
@@ -25,7 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return paths.map((path) => ({
     url: absoluteUrl(path),
     lastModified: new Date(),
-    changeFrequency: path === "/" ? "weekly" : "monthly",
-    priority: path === "/" ? 1 : 0.7,
+    changeFrequency: path === "/" || path === "/ichini/" ? "weekly" : "monthly",
+    priority: path === "/" || path === "/ichini/" ? 1 : 0.7,
   }));
 }

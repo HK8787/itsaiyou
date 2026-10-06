@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { FaqItem } from "@/data/faq";
 
-export function FaqList({ items }: { items: FaqItem[] }) {
+export function FaqList({ items }: { items: Pick<FaqItem, "q" | "a">[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (

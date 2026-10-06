@@ -115,3 +115,46 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/*
+ * ─────────────────────────────────────────────
+ * イチニキャリア（/ichini/）専用のトーン
+ *
+ * 黒 × 金。ただし金は単色で、グラデーションや光沢は使わない。
+ * 飾りを足すと「生成された高級LP」に見えるので、罫線と余白と
+ * 文字の大きさの差だけで見せる（src/components/ichini/ui.tsx 冒頭のメモ参照）。
+ * ゼロイチITの青とは混ぜないこと。
+ *
+ * フォントは src/app/ichini/layout.tsx で next/font から読み込み、
+ * --font-shippori を .ichini-root に載せている。
+ * ─────────────────────────────────────────────
+ */
+@theme inline {
+  --color-noir-950: #070708;
+  --color-noir-900: #0c0c0e;
+  --color-noir-850: #121215;
+  --color-noir-800: #18181c;
+  --color-noir-700: #232328;
+  --color-noir-600: #34343b;
+
+  /* 本文の文字色。真っ白にせず、わずかに温かみのある象牙色 */
+  --color-ivory: #f2ece0;
+  --color-ivory-dim: #bdb5a6;
+  --color-ivory-faint: #8d877b;
+
+  --color-gold-100: #f7eed8;
+  --color-gold-200: #efdfb6;
+  --color-gold-300: #e2c68c;
+  --color-gold-400: #d3ae68;
+  --color-gold-500: #c09a52;
+  --color-gold-600: #9f7d3e;
+  --color-gold-700: #7a5f2e;
+
+  --font-mincho: var(--font-shippori), "Hiragino Mincho ProN", "Yu Mincho",
+    "YuMincho", "Noto Serif JP", serif;
+}
+
+/* イチニのページでは、スクロールの端で白い地が見えないようにする */
+body:has(.ichini-root) {
+  background-color: var(--color-noir-950);
+}

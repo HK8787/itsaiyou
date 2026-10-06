@@ -29,12 +29,15 @@ export function SectionHeading({
   lead,
   align = "center",
   tone = "dark",
+  accent = "flame",
 }: {
   eyebrow?: string;
   title: ReactNode;
   lead?: string;
   align?: "center" | "left";
   tone?: "dark" | "light";
+  /** 見出し上の小さな英字の色。イチニキャリアは amber */
+  accent?: "flame" | "amber";
 }) {
   const alignment = align === "center" ? "text-center mx-auto" : "text-left";
   const titleColor = tone === "light" ? "text-white" : "text-ink-900";
@@ -43,7 +46,11 @@ export function SectionHeading({
   return (
     <div className={`${alignment} max-w-3xl`}>
       {eyebrow ? (
-        <p className="mb-3 text-sm font-bold tracking-[0.2em] text-flame-600 uppercase">
+        <p
+          className={`mb-3 text-sm font-bold tracking-[0.2em] uppercase ${
+            accent === "amber" ? "text-amber-600" : "text-flame-600"
+          }`}
+        >
           {eyebrow}
         </p>
       ) : null}
