@@ -1,0 +1,98 @@
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+import { IchiniLogo } from "@/components/ichini/Logo";
+import { ichini, ichiniNavigation } from "@/data/ichini";
+import { site } from "@/data/site";
+
+export function IchiniHeader() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-ink-100 bg-white/90 backdrop-blur">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-6 px-5 sm:px-8">
+        <Link
+          href={ichini.home}
+          className="flex shrink-0 items-center gap-2.5"
+          onClick={() => setOpen(false)}
+        >
+          <IchiniLogo className="h-8 w-8 shrink-0" />
+          <span className="text-xl font-bold tracking-tight text-ink-900">
+            {ichini.name}
+          </span>
+        </Link>
+
+        <nav className="hidden shrink-0 items-center gap-7 whitespace-nowrap lg:flex">
+          {ichiniNavigation.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="text-sm font-medium text-ink-600 transition hover:text-amber-600"
+            >
+              {item.label}
+            </Link>
+          ))}
+          <a
+            href={site.contact.lineUrl}
+            className="rounded-full bg-[#06c755] px-5 py-2.5 text-sm font-bold text-white transition hover:brightness-95"
+          >
+            LINEで無料相談
+          </a>
+        </nav>
+
+        <button
+          type="button"
+          onClick={() => setOpen((value) => !value)}
+          aria-expanded={open}
+          aria-controls="ichini-nav"
+          className="flex h-11 w-11 items-center justify-center rounded-lg text-ink-700 lg:hidden"
+        >
+          <span className="sr-only">メニューを開く</span>
+          <svg
+            viewBox="0 0 24 24"
+            className="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+          >
+            {open ? (
+              <path d="M6 6l12 12M18 6L6 18" />
+            ) : (
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            )}
+          </svg>
+        </button>
+      </div>
+
+      {open ? (
+        <nav
+          id="ichini-nav"
+          className="border-t border-ink-100 bg-white px-5 py-4 lg:hidden"
+        >
+          <ul className="flex flex-col">
+            {ichiniNavigation.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="block border-b border-ink-100 py-3.5 font-medium text-ink-700"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <a
+            href={site.contact.lineUrl}
+            onClick={() => setOpen(false)}
+            className="mt-5 block rounded-full bg-[#06c755] py-3.5 text-center font-bold text-white"
+          >
+            LINEで無料相談
+          </a>
+        </nav>
+      ) : null}
+    </header>
+  );
+}

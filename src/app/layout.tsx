@@ -1,7 +1,4 @@
 import type { Metadata } from "next";
-import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
-import { StickyCta } from "@/components/StickyCta";
 import { site } from "@/data/site";
 import { absoluteUrl } from "@/lib/url";
 import "./globals.css";
@@ -51,6 +48,16 @@ export const metadata: Metadata = {
     : undefined,
 };
 
+/**
+ * 全ブランド共通のルートレイアウト。
+ *
+ * ヘッダー・フッターはブランドごとに違うので、ここには置かない。
+ * - ゼロイチIT（未経験向け）… src/app/(zeroichi)/layout.tsx
+ * - イチニキャリア（経験者向け）… src/app/ichini/layout.tsx
+ *
+ * 下の metadata はゼロイチITの既定値。イチニキャリア側は
+ * ichini/layout.tsx の metadata で上書きしている。
+ */
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -63,10 +70,7 @@ export default function RootLayout({
         >
           本文へスキップ
         </a>
-        <Header />
-        <main id="main">{children}</main>
-        <Footer />
-        <StickyCta />
+        {children}
 
         {/*
           Cloudflare Web Analytics。site.analyticsToken が空のあいだは
