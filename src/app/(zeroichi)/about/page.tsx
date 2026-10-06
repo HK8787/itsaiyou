@@ -9,7 +9,7 @@ import { site } from "@/data/site";
 export const metadata: Metadata = {
   title: "このサイトについて",
   description:
-    "運営者の経歴と立場、提携先との関係、どこからお金が出ているのか。安心して相談していただくために、仕組みをすべて公開しています。",
+    "運営者の経歴と立場、提携先との関係。安心して相談していただくために、相談の仕組みを公開しています。",
 };
 
 /**
@@ -82,8 +82,8 @@ export default function AboutPage() {
     <>
       <PageHero
         eyebrow="About"
-        title="このサイトの立場と、お金の流れ"
-        lead="転職支援には不透明なイメージがつきものです。誰が何をして、どこからお金が出ているのかを先に公開しておきます。"
+        title="このサイトの立場と、相談の仕組み"
+        lead="転職支援には不透明なイメージがつきものです。誰が何をして、どこまでを担当するのかを先に公開しておきます。"
       />
 
       <section className="py-16 sm:py-20">
@@ -187,44 +187,15 @@ export default function AboutPage() {
           </div>
 
           <h2 className="mt-16 text-xl font-bold text-ink-900 sm:text-2xl">
-            お金の流れ
+            費用について
           </h2>
-          <ol className="mt-6 space-y-4">
-            {[
-              "あなたが提携先を通じて企業に入社する",
-              "採用が決まった企業が、提携先へ紹介手数料を支払う",
-              "提携先から当窓口へ、取次ぎに対する紹介料が支払われる",
-            ].map((item, index) => (
-              <li
-                key={item}
-                className="flex gap-4 rounded-2xl border border-ink-200 p-5"
-              >
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ink-900 text-sm font-bold text-white">
-                  {index + 1}
-                </span>
-                <span className="text-[0.95rem] leading-relaxed text-ink-700">
-                  {item}
-                </span>
-              </li>
-            ))}
-          </ol>
-
           <div className="mt-6 rounded-3xl border border-ink-200 bg-ink-50 p-7">
             <p className="font-bold text-ink-900">
-              つまり、あなたが支払う金額は0円です
+              あなたが支払う金額は0円です
             </p>
             <p className="mt-3 text-[0.95rem] leading-relaxed text-ink-700">
-              相談料・紹介料・成功報酬など、求職者の方が費用を負担することは一切ありません。
-              職業安定法により、職業紹介事業者が求職者から手数料を徴収することは原則として禁止されています。
-              もし費用を請求されるようなことがあれば、その時点で関わるのをやめてください。
-            </p>
-            <p className="mt-4 text-[0.95rem] leading-relaxed text-ink-700">
-              あわせて正直にお伝えしておくと、当窓口には
-              <strong className="text-ink-900">
-                提携先から紹介料が支払われる仕組み
-              </strong>
-              があります。だからこそ「合わないと思ったら、合わないと言う」を方針にしています。
-              無理に入社していただいても、すぐ辞めてしまえばお互いにとって損だからです。
+              {"ご相談から入社まで、費用は一切かかりません。何度相談していただいても構いません。" +
+                "もし費用を請求されるようなことがあれば、その時点で関わるのをやめてください。"}
             </p>
           </div>
 
