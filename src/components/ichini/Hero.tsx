@@ -1,6 +1,7 @@
 import { Container } from "@/components/Container";
+import { Ornament } from "@/components/ichini/ui";
 
-/** 下層ページの見出し帯。ゼロイチITの PageHero のイチニ版（濃紺 × 琥珀）。 */
+/** 下層ページの見出し帯 */
 export function IchiniHero({
   eyebrow,
   title,
@@ -11,20 +12,24 @@ export function IchiniHero({
   lead?: string;
 }) {
   return (
-    <section className="relative overflow-hidden bg-ink-900 py-16 sm:py-20">
+    <section className="relative overflow-hidden border-b border-hairline py-20 sm:py-28">
+      <div className="bg-grain absolute inset-0" aria-hidden />
       <div
-        className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-amber-500/20 blur-3xl"
         aria-hidden
+        className="absolute top-0 left-1/2 h-80 w-[44rem] -translate-x-1/2 rounded-full bg-gold-500/10 blur-3xl"
       />
-      <Container className="relative">
-        <p className="text-sm font-bold tracking-[0.25em] text-amber-300 uppercase">
+      <Container size="narrow" className="relative text-center">
+        <p className="font-display text-xs tracking-salon text-gold-300 uppercase">
           {eyebrow}
         </p>
-        <h1 className="mt-4 max-w-3xl text-3xl leading-tight font-bold text-white sm:text-4xl text-balance-ja">
+        <h1 className="mt-6 font-mincho text-[1.9rem] leading-snug font-bold text-ivory sm:text-[2.6rem] text-balance-ja">
           {title}
         </h1>
+        <Ornament className="mt-8" />
         {lead ? (
-          <p className="mt-6 max-w-2xl leading-relaxed text-ink-200">{lead}</p>
+          <p className="mx-auto mt-8 max-w-2xl text-[0.95rem] leading-loose text-ivory-dim">
+            {lead}
+          </p>
         ) : null}
       </Container>
     </section>

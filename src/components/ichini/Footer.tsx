@@ -1,67 +1,62 @@
 import Link from "next/link";
 import { Container } from "@/components/Container";
-import { IchiniLogo } from "@/components/ichini/Logo";
+import { IchiniWordmark } from "@/components/ichini/Logo";
+import { Ornament } from "@/components/ichini/ui";
 import { ichini, ichiniNavigation } from "@/data/ichini";
 import { disclosePartners, partners } from "@/data/partners";
 import { site } from "@/data/site";
 
 export function IchiniFooter() {
   return (
-    <footer className="border-t border-ink-100 bg-ink-50 pt-14 pb-28 lg:pb-14">
+    <footer className="border-t border-hairline bg-noir-950 pt-20 pb-32 lg:pb-16">
       <Container>
-        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr]">
-          <div>
-            <div className="flex items-center gap-2.5">
-              <IchiniLogo className="h-7 w-7 shrink-0" />
-              <p className="text-lg font-bold text-ink-900">{ichini.name}</p>
-            </div>
-            <p className="mt-1 text-sm text-ink-600">{ichini.tagline}</p>
-            <p className="mt-5 max-w-md text-sm leading-relaxed text-ink-600">
-              {"1回目の転職で得た経験を、次の年収とキャリアにつなげるための相談窓口です。" +
-                "相談は何度でも無料。ご本人の費用負担は一切ありません。"}
-            </p>
-          </div>
+        <div className="flex flex-col items-center text-center">
+          <IchiniWordmark />
+          <p className="mt-6 font-mincho text-sm tracking-[0.12em] text-ivory-dim">
+            {ichini.tagline}
+          </p>
+          <Ornament className="mt-10" />
 
-          <div>
-            <p className="text-sm font-bold text-ink-900">サイト内リンク</p>
-            <ul className="mt-4 grid grid-cols-2 gap-y-2.5 text-sm md:grid-cols-1">
-              <li>
+          <ul className="mt-10 flex flex-wrap justify-center gap-x-8 gap-y-3 font-mincho text-[0.82rem] tracking-[0.12em]">
+            <li>
+              <Link
+                href={ichini.home}
+                className="text-ivory-dim transition hover:text-gold-200"
+              >
+                トップ
+              </Link>
+            </li>
+            {ichiniNavigation.map((item) => (
+              <li key={item.href}>
                 <Link
-                  href={ichini.home}
-                  className="text-ink-600 hover:text-amber-600"
+                  href={item.href}
+                  className="text-ivory-dim transition hover:text-gold-200"
                 >
-                  トップ
+                  {item.label}
                 </Link>
               </li>
-              {ichiniNavigation.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-ink-600 hover:text-amber-600"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-              <li>
-                <Link href="/" className="text-ink-600 hover:text-amber-600">
-                  未経験の方（{site.name}）
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/privacy/"
-                  className="text-ink-600 hover:text-amber-600"
-                >
-                  プライバシーポリシー
-                </Link>
-              </li>
-            </ul>
-          </div>
+            ))}
+            <li>
+              <Link
+                href="/"
+                className="text-ivory-dim transition hover:text-gold-200"
+              >
+                {`未経験の方（${site.name}）`}
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/privacy/"
+                className="text-ivory-dim transition hover:text-gold-200"
+              >
+                プライバシーポリシー
+              </Link>
+            </li>
+          </ul>
         </div>
 
-        <div className="mt-12 rounded-2xl border border-ink-200 bg-white p-6 text-xs leading-relaxed text-ink-600">
-          <p className="mb-2 font-bold text-ink-800">
+        <div className="mx-auto mt-14 max-w-3xl border border-hairline p-6 text-xs leading-loose text-ivory-faint sm:p-8">
+          <p className="mb-3 font-mincho tracking-[0.12em] text-ivory-dim">
             当サイトの位置づけについて
           </p>
           <p>
@@ -86,8 +81,11 @@ export function IchiniFooter() {
           </p>
         </div>
 
-        <p className="mt-8 text-center text-xs text-ink-500">
-          © {new Date().getFullYear()} {ichini.name}（運営：{site.operator.name}）
+        <p className="mt-12 text-center font-display text-xs tracking-salon text-ivory-faint uppercase">
+          {`© ${new Date().getFullYear()} Ichini Career`}
+        </p>
+        <p className="mt-2 text-center text-[0.7rem] text-ivory-faint">
+          {`運営：${site.operator.name}`}
         </p>
       </Container>
     </footer>

@@ -1,15 +1,39 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { site } from "@/data/site";
 
-/** スマホ向けの追従CTA。フッターに余白(pb-28)を確保しているので重なりません。 */
+/**
+ * スマホ向けの追従CTA。フッターに余白(pb-28)を確保しているので重なりません。
+ *
+ * 最初の画面ではヒーローに同じボタンがあるので出さない。
+ * 画面の7割ほどスクロールしたところで、下からすっと出す。
+ * 入口から金のボタンが二重に並ぶと、落ち着いた空気が崩れるため。
+ */
 export function IchiniStickyCta() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > window.innerHeight * 0.7);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-ink-100 bg-white/95 p-3 backdrop-blur lg:hidden">
+    <div
+      className={`fixed inset-x-0 bottom-0 z-40 border-t border-hairline bg-noir-950/90 p-3 backdrop-blur-md transition-transform duration-500 lg:hidden ${
+        visible ? "translate-y-0" : "translate-y-full"
+      }`}
+      aria-hidden={!visible}
+    >
       <div className="mx-auto max-w-md">
         <a
           href={site.contact.lineUrl}
-          className="block rounded-full bg-[#06c755] py-3.5 text-center font-bold text-white"
+          tabIndex={visible ? 0 : -1}
+          className="bg-gold-foil block py-3.5 text-center font-mincho font-bold tracking-[0.14em] text-noir-950"
         >
-          LINEで無料相談する
+          LINEで相談する（無料）
         </a>
       </div>
     </div>

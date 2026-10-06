@@ -321,7 +321,7 @@ FAQ（`src/data/faq.ts`）と `/about` の文言にも同じ数字が入って�
 | | ゼロイチIT | イチニキャリア |
 |---|---|---|
 | 対象 | 未経験・学歴不問・最初の転職 | 2回目・3回目、経験者の年収アップ |
-| 色 | 青 | 濃紺 × 琥珀 |
+| デザイン | 青・ゴシック体 | 漆黒 × シャンパンゴールド・明朝体（会員制ラウンジの雰囲気） |
 | LINE公式 | 共通 | 共通 |
 | 運営者・提携先 | 共通 | 共通 |
 | プライバシーポリシー | `/privacy/` | 同じページを使う |
@@ -342,6 +342,8 @@ FAQ（`src/data/faq.ts`）と `/about` の文言にも同じ数字が入って�
 
 - 文言・求人の例・FAQ：`src/data/ichini.ts`
 - 診断の質問と結果：`src/components/ichini/Diagnosis.tsx`
+- 配色とフォント：`src/app/globals.css` の「イチニキャリア専用のトーン」、`src/app/ichini/layout.tsx`
+- ボタンや飾り罫などの部品：`src/components/ichini/ui.tsx`（LINEボタンも緑ではなく金。文言に必ず「LINE」を入れる）
 - OGP画像（SNSで共有したときの画像）は未作成です。作るまでは画像なしで表示されます
 
 ---

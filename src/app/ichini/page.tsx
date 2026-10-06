@@ -1,9 +1,16 @@
 import Link from "next/link";
-import { Container, SectionHeading } from "@/components/Container";
-import { FaqList } from "@/components/FaqList";
-import { LineButton, LineIdNote } from "@/components/LineButton";
+import { Container } from "@/components/Container";
 import { IchiniCta } from "@/components/ichini/Cta";
+import { IchiniFaq } from "@/components/ichini/Faq";
 import { IchiniJobCard } from "@/components/ichini/JobCard";
+import {
+  CornerFrame,
+  GoldLineButton,
+  Ornament,
+  OutlineLink,
+  SalonHeading,
+  SalonLineNote,
+} from "@/components/ichini/ui";
 import {
   ichiniDifferences,
   ichiniFaq,
@@ -16,20 +23,33 @@ import { partnerSupport } from "@/data/support";
 
 const steps = [
   {
-    title: "LINEで今の状況を送る",
-    body: "今の仕事・経験年数・年収・転職したい時期など、分かる範囲で大丈夫です。",
+    en: "Contact",
+    title: "LINEで、今の状況をお送りください",
+    body: "今のお仕事・経験年数・年収・転職したい時期など、分かる範囲で構いません。",
   },
   {
-    title: "狙える方向を一緒に整理",
-    body: "今の経験がどこで評価されそうか、年収が上がりやすい動き方はどれかを整理します。",
+    en: "Consultation",
+    title: "狙える方向を、ご一緒に整理します",
+    body: "今の経験がどこで評価されそうか、年収が上がりやすい動き方はどれかを読み解きます。",
   },
   {
-    title: "提携先の担当者とつながる",
+    en: "Introduction",
+    title: "提携先の担当者とおつなぎします",
     body: "ご希望に応じて、厚生労働大臣の許可を受けた提携先の担当者をご紹介します。",
   },
   {
-    title: "求人探し・書類・面接",
+    en: "Placement",
+    title: "求人探しから、書類・面接まで",
     body: "条件に合う求人探しから、求人ごとの書類の調整、面接対策まで進めます。",
+  },
+];
+
+const credentials = [
+  { value: "無料", label: "ご相談は何度でも" },
+  { value: "正社員", label: "ご紹介は正社員求人のみ" },
+  {
+    value: partnerSupport.jobCount,
+    label: `取り扱い求人（${partnerSupport.jobCountNote}）`,
   },
 ];
 
@@ -38,259 +58,338 @@ export default function IchiniHome() {
 
   return (
     <>
-      {/* ヒーロー */}
-      <section className="relative overflow-hidden bg-ink-900 py-20 sm:py-28">
+      {/* ───── ヒーロー ───── */}
+      <section className="relative isolate overflow-hidden">
+        <div className="bg-grain absolute inset-0 -z-10" aria-hidden />
+        {/* 上から差し込む、ほのかな金の光 */}
         <div
-          className="absolute -top-32 -right-20 h-96 w-96 rounded-full bg-amber-500/20 blur-3xl"
           aria-hidden
+          className="absolute -top-40 left-1/2 -z-10 h-[34rem] w-[60rem] -translate-x-1/2 rounded-full bg-gold-500/[0.13] blur-[110px]"
+        />
+        {/* 左右の細い縦罫 */}
+        <div
+          aria-hidden
+          className="absolute inset-y-0 left-[6%] -z-10 hidden w-px bg-gradient-to-b from-transparent via-gold-400/25 to-transparent lg:block"
         />
         <div
-          className="absolute -bottom-40 -left-20 h-96 w-96 rounded-full bg-amber-300/10 blur-3xl"
           aria-hidden
+          className="absolute inset-y-0 right-[6%] -z-10 hidden w-px bg-gradient-to-b from-transparent via-gold-400/25 to-transparent lg:block"
         />
-        <Container className="relative">
-          <p className="inline-block rounded-full border border-amber-300/40 px-4 py-1.5 text-sm font-bold text-amber-200">
-            2回目・3回目の転職をする方へ
+
+        <Container className="flex min-h-[calc(100svh-4.5rem)] flex-col items-center justify-center py-24 text-center sm:py-32">
+          <p className="font-display text-xs tracking-salon text-gold-300 uppercase sm:text-sm">
+            For Your Second Career
           </p>
-          <h1 className="mt-6 max-w-3xl text-3xl leading-tight font-bold text-white sm:text-5xl sm:leading-tight text-balance-ja">
-            {"その経験は、もう武器になっている。"}
+          <Ornament className="mt-7" />
+
+          <h1 className="mt-10 font-mincho text-[2rem] leading-[1.65] font-bold text-ivory sm:text-[3.4rem] sm:leading-[1.55]">
+            {"積み重ねた経験に、"}
             <br />
-            <span className="text-amber-300">
-              {"次は、年収とキャリアを上げる転職を。"}
-            </span>
+            <span className="text-gold-foil">{"相応しい次の場所を。"}</span>
           </h1>
-          <p className="mt-7 max-w-2xl leading-relaxed text-ink-200">
-            {"1回目の転職は「やる気」で決まっても、2回目からは「経験をどう伝えるか」で条件が変わります。" +
-              "今の経験がどこで評価されるのか、どう動けば年収が上がりやすいのかを、一緒に整理しましょう。"}
+
+          <p className="mt-10 max-w-xl text-[0.95rem] leading-[2.2] text-ivory-dim sm:text-base">
+            {"二度目、三度目の転職は、"}
+            <br className="sm:hidden" />
+            {"経験をどう語るかで条件が変わります。"}
+            <br />
+            {"あなたの経歴を丁寧に読み解き、"}
+            <br className="sm:hidden" />
+            {"年収とキャリアが上がる一手を、ご一緒に。"}
           </p>
 
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
-            <LineButton size="lg">LINEで無料相談する</LineButton>
-            <Link
-              href="/ichini/shindan/"
-              className="inline-flex items-center justify-center rounded-full border border-white/35 px-7 py-4 font-bold text-white transition hover:bg-white/10"
-            >
-              年収アップ診断（約1分）
-            </Link>
+          <div className="mt-14 flex w-full max-w-md flex-col gap-4 sm:w-auto sm:max-w-none sm:flex-row">
+            <GoldLineButton size="lg">LINEで相談する（無料）</GoldLineButton>
+            <OutlineLink href="/ichini/shindan/">年収アップ診断</OutlineLink>
           </div>
-          <div className="mt-4 max-w-md sm:text-left">
-            <LineIdNote tone="light" />
+          <div className="mt-5">
+            <SalonLineNote />
           </div>
 
-          <ul className="mt-12 grid max-w-3xl gap-3 sm:grid-cols-3">
-            {[
-              { value: "無料", label: "相談は何度でも" },
-              { value: "正社員", label: "紹介は正社員求人のみ" },
-              {
-                value: partnerSupport.jobCount,
-                label: `取り扱い求人（${partnerSupport.jobCountNote}）`,
-              },
-            ].map((item) => (
-              <li
+          <dl className="mt-20 grid w-full max-w-3xl grid-cols-3 border-y border-hairline">
+            {credentials.map((item, index) => (
+              <div
                 key={item.label}
-                className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4"
+                className={`px-2 py-6 sm:px-6 ${
+                  index > 0 ? "border-l border-hairline" : ""
+                }`}
               >
-                <p className="text-lg font-bold text-white">{item.value}</p>
-                <p className="mt-0.5 text-xs text-ink-300">{item.label}</p>
-              </li>
+                <dt className="sr-only">{item.label}</dt>
+                <dd className="font-mincho text-base font-bold text-gold-200 sm:text-xl">
+                  {item.value}
+                </dd>
+                <dd className="mt-2 text-[0.65rem] leading-relaxed tracking-[0.06em] text-ivory-faint sm:text-xs">
+                  {item.label}
+                </dd>
+              </div>
             ))}
-          </ul>
+          </dl>
         </Container>
       </section>
 
-      {/* こんな方へ */}
-      <section className="py-16 sm:py-24">
+      {/* ───── I. こんな方へ ───── */}
+      <section className="border-t border-hairline bg-noir-900 py-24 sm:py-32">
         <Container size="narrow">
-          <SectionHeading
-            accent="amber"
-            eyebrow="For you"
-            title="こんな方の相談を受けています"
+          <SalonHeading
+            numeral="I"
+            eyebrow="For Those Who"
+            title="こんな方の、ご相談をお受けしています"
           />
-          <ul className="mt-10 space-y-3">
-            {ichiniWorries.map((worry) => (
+          <ul className="mt-16">
+            {ichiniWorries.map((worry, index) => (
               <li
                 key={worry}
-                className="flex items-start gap-3 rounded-2xl border border-ink-200 bg-white px-5 py-4"
+                className="flex items-baseline gap-6 border-b border-hairline py-6 first:border-t"
               >
-                <span className="mt-0.5 shrink-0 font-bold text-amber-600">
-                  ✓
+                <span className="font-display text-sm text-gold-400 italic">
+                  {String(index + 1).padStart(2, "0")}
                 </span>
-                <span className="text-ink-700">{worry}</span>
+                <span className="font-mincho leading-relaxed text-ivory sm:text-lg">
+                  {worry}
+                </span>
               </li>
             ))}
           </ul>
-          <p className="mt-6 text-center text-sm text-ink-500">
-            {"ひとつでも当てはまれば、話を聞くだけでも大丈夫です。"}
+          <p className="mt-10 text-center font-mincho text-sm tracking-[0.08em] text-ivory-dim">
+            {"ひとつでも当てはまれば、お話を聞くだけでも構いません。"}
           </p>
         </Container>
       </section>
 
-      {/* 1回目と2回目の違い */}
-      <section className="bg-ink-50 py-16 sm:py-24">
+      {/* ───── II. 1回目と2回目の違い ───── */}
+      <section className="py-24 sm:py-32">
         <Container>
-          <SectionHeading
-            accent="amber"
-            eyebrow="Difference"
-            title="1回目と2回目以降では、見られるところが違います"
-            lead="同じやり方で2回目の転職をすると、経験があるのに条件が上がらない、ということが起きます。"
+          <SalonHeading
+            numeral="II"
+            eyebrow="The Difference"
+            title={
+              <>
+                {"一度目と二度目では、"}
+                <br />
+                {"見られるところが違います"}
+              </>
+            }
+            lead="同じやり方で二度目の転職に臨むと、経験があるのに条件が上がらない、ということが起こります。"
           />
-          <div className="mt-12 overflow-hidden rounded-3xl border border-ink-200 bg-white">
-            <div className="grid grid-cols-[6rem_1fr_1fr] border-b border-ink-200 bg-ink-900 text-sm font-bold text-white sm:grid-cols-[9rem_1fr_1fr]">
-              <p className="px-4 py-3" />
-              <p className="px-4 py-3 text-ink-300">1回目の転職</p>
-              <p className="px-4 py-3 text-amber-300">2回目以降</p>
+
+          {/* PC：3列の表 */}
+          <div className="mx-auto mt-16 hidden max-w-4xl sm:block">
+            <div className="grid grid-cols-[9rem_1fr_1fr] items-end pb-4">
+              <span />
+              <p className="px-6 font-display text-xs tracking-salon text-ivory-faint uppercase">
+                First
+                <span className="mt-1 block font-mincho text-xs tracking-[0.1em] normal-case">
+                  一度目の転職
+                </span>
+              </p>
+              <p className="px-6 font-display text-xs tracking-salon text-gold-300 uppercase">
+                Second
+                <span className="mt-1 block font-mincho text-xs tracking-[0.1em] text-gold-200 normal-case">
+                  二度目以降
+                </span>
+              </p>
             </div>
             {ichiniDifferences.map((row) => (
               <div
                 key={row.label}
-                className="grid grid-cols-[6rem_1fr_1fr] border-b border-ink-100 text-sm last:border-b-0 sm:grid-cols-[9rem_1fr_1fr]"
+                className="grid grid-cols-[9rem_1fr_1fr] border-t border-hairline last:border-b"
               >
-                <p className="bg-ink-50 px-3 py-4 font-bold text-ink-800 sm:px-4">
+                <p className="py-6 font-mincho text-sm font-bold tracking-[0.08em] text-gold-200">
                   {row.label}
                 </p>
-                <p className="px-3 py-4 text-ink-500 sm:px-4">{row.first}</p>
-                <p className="px-3 py-4 font-bold text-ink-800 sm:px-4">{row.next}</p>
+                <p className="px-6 py-6 text-sm leading-relaxed text-ivory-faint">
+                  {row.first}
+                </p>
+                <p className="border-l border-gold-400/30 bg-gold-400/[0.04] px-6 py-6 font-mincho text-[0.95rem] leading-relaxed font-bold text-ivory">
+                  {row.next}
+                </p>
               </div>
             ))}
           </div>
+
+          {/* スマホ：項目ごとに縦に積む */}
+          <dl className="mt-14 border-t border-hairline sm:hidden">
+            {ichiniDifferences.map((row) => (
+              <div key={row.label} className="border-b border-hairline py-7">
+                <dt className="flex items-center gap-3 font-mincho text-sm font-bold tracking-[0.1em] text-gold-200">
+                  <span
+                    aria-hidden
+                    className="h-1.5 w-1.5 rotate-45 bg-gold-400"
+                  />
+                  {row.label}
+                </dt>
+                <dd className="mt-4 flex gap-4 text-[0.82rem] leading-relaxed text-ivory-faint">
+                  <span className="w-16 shrink-0 font-mincho text-[0.7rem] tracking-[0.08em]">
+                    一度目
+                  </span>
+                  {row.first}
+                </dd>
+                <dd className="mt-3 flex gap-4 border-l border-gold-400/50 bg-gold-400/[0.05] py-3 pr-3 pl-3 font-mincho text-[0.9rem] leading-relaxed font-bold text-ivory">
+                  <span className="w-[3.25rem] shrink-0 text-[0.7rem] font-normal tracking-[0.08em] text-gold-300">
+                    二度目〜
+                  </span>
+                  {row.next}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </Container>
       </section>
 
-      {/* 年収が上がりやすい動き方 */}
-      <section className="py-16 sm:py-24">
+      {/* ───── III. 年収が上がりやすい動き方 ───── */}
+      <section className="border-t border-hairline bg-noir-900 py-24 sm:py-32">
         <Container>
-          <SectionHeading
-            accent="amber"
-            eyebrow="Patterns"
-            title="年収が上がりやすい、3つの動き方"
-            lead="どれが合うかは、今の職種と経験年数で変わります。"
+          <SalonHeading
+            numeral="III"
+            eyebrow="Three Paths"
+            title="年収が上がりやすい、三つの動き方"
+            lead="どれが合うかは、今の職種と経験年数によって変わります。"
           />
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
+          <div className="mt-16 grid gap-px bg-gold-400/20 md:grid-cols-3">
             {ichiniPatterns.map((pattern, index) => (
               <article
                 key={pattern.title}
-                className="flex flex-col rounded-3xl border border-ink-200 bg-white p-6 sm:p-7"
+                className="flex flex-col bg-noir-900 p-8 sm:p-10"
               >
-                <p className="text-sm font-bold text-amber-600">
-                  {`パターン ${index + 1}`}
-                </p>
-                <h3 className="mt-2 text-lg font-bold text-ink-900">
+                <div className="flex items-baseline justify-between">
+                  <span className="font-display text-5xl leading-none text-gold-400/80 italic">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="font-display text-xs tracking-salon text-gold-300 uppercase">
+                    {pattern.en}
+                  </span>
+                </div>
+                <h3 className="mt-8 font-mincho text-xl leading-relaxed font-bold text-ivory">
                   {pattern.title}
                 </h3>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-600">
+                <p className="mt-5 flex-1 text-[0.88rem] leading-loose text-ivory-dim">
                   {pattern.body}
                 </p>
-                <p className="mt-4 rounded-xl bg-amber-50 px-4 py-3 text-xs font-bold text-amber-900">
+                <p className="mt-8 border-t border-hairline pt-5 font-mincho text-[0.8rem] leading-relaxed text-gold-200">
                   {pattern.example}
                 </p>
               </article>
             ))}
           </div>
 
-          <div className="mt-12 rounded-3xl bg-ink-900 p-7 text-center sm:p-10">
-            <p className="text-lg font-bold text-white sm:text-xl">
-              {"自分はどれが合う？ 6つの質問で分かります"}
+          {/* 診断への入口 */}
+          <CornerFrame className="mx-auto mt-20 max-w-3xl px-6 py-14 text-center sm:px-12">
+            <p className="font-display text-xs tracking-salon text-gold-300 uppercase">
+              Private Assessment
             </p>
-            <p className="mt-3 text-sm text-ink-300">
-              {"年収が上がる余地と、あなたの職種で上がりやすい動き方をお返しします。"}
+            <p className="mt-5 font-mincho text-xl leading-relaxed font-bold text-ivory sm:text-2xl">
+              {"あなたに合うのは、どの道か。"}
             </p>
-            <Link
-              href="/ichini/shindan/"
-              className="mt-7 inline-block rounded-full bg-amber-400 px-8 py-4 font-bold text-ink-900 transition hover:bg-amber-300"
-            >
-              年収アップ診断をはじめる
-            </Link>
-          </div>
+            <p className="mx-auto mt-5 max-w-md text-sm leading-loose text-ivory-dim">
+              {"六つの質問にお答えいただくだけで、年収が上がる余地と、あなたの職種で上がりやすい動き方をお返しします。"}
+            </p>
+            <div className="mt-9">
+              <OutlineLink href="/ichini/shindan/">
+                年収アップ診断を受ける（約1分）
+              </OutlineLink>
+            </div>
+          </CornerFrame>
         </Container>
       </section>
 
-      {/* 求人の例 */}
-      <section className="bg-ink-50 py-16 sm:py-24">
+      {/* ───── IV. 求人の例 ───── */}
+      <section className="py-24 sm:py-32">
         <Container>
-          <SectionHeading
-            accent="amber"
-            eyebrow="Jobs"
-            title="経験者向け 求人の例"
+          <SalonHeading
+            numeral="IV"
+            eyebrow="Selected Positions"
+            title="経験者向け、求人の例"
             lead="経験者向け求人の条件傾向をまとめたモデルケースです。実際にどんな求人があるかは、地域や時期によって変わります。"
           />
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
+          <div className="mt-16 grid gap-6 md:grid-cols-3">
             {previewJobs.map((job) => (
               <IchiniJobCard key={job.slug} job={job} />
             ))}
           </div>
-          <div className="mt-10 text-center">
-            <Link
-              href="/ichini/jobs/"
-              className="inline-block rounded-full border border-ink-300 bg-white px-7 py-3.5 font-bold text-ink-700 transition hover:bg-ink-50"
-            >
+          <div className="mt-14 text-center">
+            <OutlineLink href="/ichini/jobs/">
               IT以外も含めて、すべての例を見る
-            </Link>
+            </OutlineLink>
           </div>
         </Container>
       </section>
 
-      {/* 流れとサポート */}
-      <section className="py-16 sm:py-24">
+      {/* ───── V. 流れとサポート ───── */}
+      <section className="border-t border-hairline bg-noir-900 py-24 sm:py-32">
         <Container>
-          <SectionHeading
-            accent="amber"
-            eyebrow="Flow"
-            title="相談から入社までの流れ"
-            lead="求人のご紹介は、入社したい月の3か月前から本格的に始まります。それより前でも、方向決めや職務経歴書の準備は一緒に進められます。"
+          <SalonHeading
+            numeral="V"
+            eyebrow="The Process"
+            title="ご相談から、入社まで"
+            lead="求人のご紹介は、入社をご希望の月の3か月前から本格的に始まります。それより前でも、方向決めや職務経歴書の準備はご一緒に進められます。"
           />
-          <ol className="mt-12 grid gap-5 md:grid-cols-4">
+
+          <ol className="relative mx-auto mt-16 max-w-2xl">
+            <span
+              aria-hidden
+              className="absolute top-2 bottom-2 left-[0.95rem] w-px bg-gradient-to-b from-gold-400/70 via-gold-400/30 to-transparent"
+            />
             {steps.map((step, index) => (
-              <li
-                key={step.title}
-                className="rounded-3xl border border-ink-200 bg-white p-6"
-              >
-                <p className="text-sm font-bold text-amber-600">
-                  {`STEP 0${index + 1}`}
+              <li key={step.title} className="relative pb-12 pl-14 last:pb-0">
+                <span className="absolute top-0 left-0 flex h-8 w-8 items-center justify-center border border-gold-400/70 bg-noir-900 font-display text-sm text-gold-200">
+                  {index + 1}
+                </span>
+                <p className="font-display text-xs tracking-salon text-gold-300 uppercase">
+                  {step.en}
                 </p>
-                <p className="mt-2 font-bold text-ink-900">{step.title}</p>
-                <p className="mt-2 text-sm leading-relaxed text-ink-600">
+                <p className="mt-2 font-mincho text-lg leading-relaxed font-bold text-ivory">
+                  {step.title}
+                </p>
+                <p className="mt-2 text-[0.88rem] leading-loose text-ivory-dim">
                   {step.body}
                 </p>
               </li>
             ))}
           </ol>
 
-          <div className="mt-14">
-            <h3 className="text-center text-xl font-bold text-ink-900">
-              おつなぎした先で、やってもらえること
+          <div className="mt-24">
+            <p className="text-center font-display text-xs tracking-salon text-gold-300 uppercase">
+              Our Partner
+            </p>
+            <h3 className="mt-4 text-center font-mincho text-xl font-bold text-ivory sm:text-2xl">
+              おつなぎした先で、お任せいただけること
             </h3>
-            <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <Ornament className="mt-7" />
+            <ul className="mt-12 grid gap-px bg-gold-400/20 sm:grid-cols-2 lg:grid-cols-3">
               {partnerSupport.strengths.map((item) => (
-                <li
-                  key={item.title}
-                  className="rounded-2xl border border-ink-200 bg-white p-5"
-                >
-                  <p className="font-bold text-ink-900">{item.title}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-600">
+                <li key={item.title} className="bg-noir-900 p-7">
+                  <p className="flex items-center gap-3 font-mincho font-bold text-gold-200">
+                    <span
+                      aria-hidden
+                      className="h-1.5 w-1.5 shrink-0 rotate-45 bg-gold-400"
+                    />
+                    {item.title}
+                  </p>
+                  <p className="mt-3 text-[0.85rem] leading-loose text-ivory-dim">
                     {item.body}
                   </p>
                 </li>
               ))}
             </ul>
-            <p className="mt-4 text-center text-xs text-ink-500">
+            <p className="mt-5 text-center text-[0.7rem] text-ivory-faint">
               {`※ 求人数「${partnerSupport.jobCount}」は${partnerSupport.jobCountNote}です。`}
             </p>
           </div>
         </Container>
       </section>
 
-      {/* よくある質問 */}
-      <section id="faq" className="scroll-mt-20 bg-ink-50 py-16 sm:py-24">
+      {/* ───── VI. よくある質問 ───── */}
+      <section id="faq" className="scroll-mt-20 py-24 sm:py-32">
         <Container size="narrow">
-          <SectionHeading accent="amber" eyebrow="FAQ" title="よくある質問" />
-          <div className="mt-10">
-            <FaqList items={ichiniFaq} />
+          <SalonHeading numeral="VI" eyebrow="Questions" title="よくあるご質問" />
+          <div className="mt-16">
+            <IchiniFaq items={ichiniFaq} />
           </div>
-          <p className="mt-8 text-center text-sm text-ink-600">
+          <p className="mt-12 text-center text-sm leading-loose text-ivory-dim">
             {"未経験からIT業界を目指す方は、姉妹サイトの"}
             <Link
               href="/"
-              className="font-bold text-ink-900 underline underline-offset-4"
+              className="text-gold-200 underline decoration-gold-400/40 underline-offset-4"
             >
               {site.name}
             </Link>
@@ -299,7 +398,9 @@ export default function IchiniHome() {
         </Container>
       </section>
 
-      <IchiniCta />
+      <div className="border-t border-hairline">
+        <IchiniCta />
+      </div>
     </>
   );
 }

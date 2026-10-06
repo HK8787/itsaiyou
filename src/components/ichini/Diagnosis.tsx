@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { LineButton, LineIdNote } from "@/components/LineButton";
+import {
+  CornerFrame,
+  GoldLineButton,
+  Ornament,
+  SalonLineNote,
+} from "@/components/ichini/ui";
 
 /**
  * 年収アップ診断。
@@ -250,151 +255,189 @@ export function IchiniDiagnosis() {
     const move = moves[result.track];
 
     return (
-      <div className="rounded-3xl border border-ink-200 bg-white p-6 shadow-xl shadow-ink-900/5 sm:p-9">
-        <p className="text-sm font-bold tracking-widest text-amber-600">
-          診断結果
-        </p>
-        <h3 className="mt-3 text-xl font-bold text-ink-900 sm:text-2xl">
-          {result.level.headline}
-        </h3>
-        <p className="mt-4 text-[0.95rem] text-ink-600">{result.level.body}</p>
+      <CornerFrame className="border border-hairline bg-noir-900/70 px-6 py-12 sm:px-12 sm:py-14">
+        <div className="text-center">
+          <p className="font-display text-xs tracking-salon text-gold-300 uppercase">
+            Your Result
+          </p>
+          <p className="mt-6 text-xs tracking-[0.2em] text-ivory-faint">
+            年収が上がる余地
+          </p>
+          <p className="text-gold-foil mt-3 font-mincho text-4xl font-bold sm:text-5xl">
+            {result.level.label}
+          </p>
+          <Ornament className="mt-8" />
+          <p className="mx-auto mt-8 max-w-lg text-[0.92rem] leading-loose text-ivory-dim">
+            {result.level.body}
+          </p>
+        </div>
 
-        <div className="mt-7 rounded-2xl border border-amber-200 bg-amber-50 p-5 sm:p-6">
-          <p className="font-bold text-ink-900">{move.title}</p>
-          <ul className="mt-3 space-y-2">
-            {move.items.map((item) => (
-              <li key={item} className="flex gap-2.5 text-sm text-ink-700">
-                <span className="mt-0.5 shrink-0 font-bold text-amber-600">
-                  ✓
+        <div className="mt-12 border-t border-hairline pt-10">
+          <p className="font-display text-xs tracking-salon text-gold-300 uppercase">
+            Recommended Moves
+          </p>
+          <p className="mt-3 font-mincho text-lg leading-relaxed font-bold text-ivory">
+            {move.title}
+          </p>
+          <ol className="mt-6 space-y-4">
+            {move.items.map((item, index) => (
+              <li
+                key={item}
+                className="flex gap-4 text-[0.9rem] leading-relaxed text-ivory-dim"
+              >
+                <span className="font-display text-base text-gold-400 italic">
+                  {String(index + 1).padStart(2, "0")}
                 </span>
                 {item}
               </li>
             ))}
-          </ul>
+          </ol>
         </div>
 
         {result.flags.size > 0 ? (
-          <div className="mt-5 space-y-3">
+          <div className="mt-10 space-y-4">
             {result.flags.has("many") ? (
-              <p className="rounded-2xl bg-ink-50 p-4 text-sm text-ink-700">
-                <b className="text-ink-900">転職回数について：</b>
+              <Note title="転職回数について">
                 回数そのものより「理由の一貫性」と「次はなぜ続けられるか」が見られます。職務経歴書での書き方を整えるだけで、書類の通り方が変わることは珍しくありません。
-              </p>
+              </Note>
             ) : null}
             {result.flags.has("low-pay") ? (
-              <p className="rounded-2xl bg-ink-50 p-4 text-sm text-ink-700">
-                <b className="text-ink-900">今の年収について：</b>
+              <Note title="今の年収について">
                 同じ経験でも、会社や業界によって相場は変わります。今の条件が相場より低めの可能性もあるので、一度比べてみる価値があります。
-              </p>
+              </Note>
             ) : null}
             {result.flags.has("short") ? (
-              <p className="rounded-2xl bg-ink-50 p-4 text-sm text-ink-700">
-                <b className="text-ink-900">経験年数について：</b>
-                1年未満だと「経験者」としては見られにくい時期です。今の職種で経験を積むか、未経験の職種に挑戦するかで動き方が変わるので、そこから一緒に考えましょう。
-              </p>
+              <Note title="経験年数について">
+                1年未満だと「経験者」としては見られにくい時期です。今の職種で経験を積むか、未経験の職種に挑戦するかで動き方が変わるので、そこからご一緒に考えましょう。
+              </Note>
             ) : null}
           </div>
         ) : null}
 
-        <p className="mt-5 text-xs leading-relaxed text-ink-500">
+        <p className="mt-8 text-[0.7rem] leading-relaxed text-ivory-faint">
           ※ この診断は目安です。年収アップを保証するものではありません。実際の条件は、経験の内容・地域・その時期の求人によって変わります。
         </p>
 
-        <div className="mt-8 rounded-2xl border border-ink-200 p-5">
-          <p className="text-sm font-bold text-ink-900">
-            この結果をLINEで送ると、話が早く進みます
+        <div className="mt-12 border-t border-hairline pt-10 text-center">
+          <p className="font-mincho font-bold text-ivory">
+            この結果をLINEでお送りいただくと、お話が早く進みます
           </p>
-          <pre className="mt-3 max-h-48 overflow-auto rounded-xl bg-ink-50 p-4 text-xs leading-relaxed whitespace-pre-wrap text-ink-700">
+          <pre className="mt-6 max-h-52 overflow-auto border border-hairline bg-noir-950 p-5 text-left font-sans text-xs leading-relaxed whitespace-pre-wrap text-ivory-dim">
             {result.summary}
           </pre>
           <button
             type="button"
             onClick={() => copy(result.summary)}
-            className="mt-3 w-full rounded-full border border-ink-300 py-3 text-sm font-bold text-ink-700 transition hover:bg-ink-50"
+            className="mt-4 w-full border border-gold-400/60 py-3.5 font-mincho text-sm tracking-[0.12em] text-gold-200 transition hover:bg-gold-400/10"
           >
             {copied ? "コピーしました" : "結果をコピーする"}
           </button>
-        </div>
-
-        <div className="mt-6 text-center">
-          <LineButton block note="コピーした結果を、そのまま貼り付けて送れます">
-            この結果をLINEで相談する
-          </LineButton>
-          <div className="mt-3">
-            <LineIdNote />
+          <div className="mt-6">
+            <GoldLineButton block size="lg">
+              LINEで結果を相談する
+            </GoldLineButton>
+          </div>
+          <p className="mt-3 text-xs text-ivory-faint">
+            コピーした結果を、そのまま貼り付けてお送りいただけます
+          </p>
+          <div className="mt-2">
+            <SalonLineNote />
           </div>
         </div>
 
-        <div className="mt-6 flex flex-col items-center gap-3 text-sm">
+        <div className="mt-10 flex flex-col items-center gap-4 font-mincho text-sm tracking-[0.08em]">
           <Link
             href="/ichini/jobs/"
-            className="text-ink-600 underline underline-offset-4"
+            className="text-gold-200 underline decoration-gold-400/40 underline-offset-8"
           >
             経験者向けの求人の例を見る
           </Link>
           <button
             type="button"
             onClick={reset}
-            className="text-ink-500 underline underline-offset-4"
+            className="text-ivory-faint underline decoration-ivory-faint/40 underline-offset-8"
           >
             もう一度診断する
           </button>
         </div>
-      </div>
+      </CornerFrame>
     );
   }
 
   const question = questions[step];
 
   return (
-    <div className="rounded-3xl border border-ink-200 bg-white p-6 shadow-xl shadow-ink-900/5 sm:p-9">
+    <CornerFrame className="border border-hairline bg-noir-900/70 px-6 py-10 sm:px-12 sm:py-12">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-bold tracking-widest text-amber-600">
-          Q{step + 1} / {questions.length}
+        <p className="font-display text-sm tracking-[0.2em] text-gold-300">
+          <span className="text-2xl italic">{step + 1}</span>
+          <span className="mx-1.5 text-ivory-faint">/</span>
+          <span className="text-ivory-faint">{questions.length}</span>
         </p>
         {step > 0 ? (
           <button
             type="button"
             onClick={() => setStep((prev) => prev - 1)}
-            className="text-sm text-ink-500 underline underline-offset-4"
+            className="font-mincho text-xs tracking-[0.1em] text-ivory-faint underline decoration-ivory-faint/40 underline-offset-4"
           >
-            前に戻る
+            前の質問に戻る
           </button>
         ) : null}
       </div>
 
-      <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-ink-100">
+      <div className="mt-5 h-px bg-noir-600">
         <div
-          className="h-full rounded-full bg-amber-500 transition-all duration-300"
+          className="bg-gold-foil h-px transition-all duration-500"
           style={{ width: `${(step / questions.length) * 100}%` }}
         />
       </div>
 
-      <h3 className="mt-6 text-lg font-bold text-ink-900 sm:text-xl">
+      <h3 className="mt-10 font-mincho text-xl leading-relaxed font-bold text-ivory sm:text-2xl">
         {question.title}
       </h3>
-      <p className="mt-2 text-sm text-ink-500">{question.note}</p>
+      <p className="mt-3 text-sm leading-relaxed text-ivory-faint">
+        {question.note}
+      </p>
 
-      <ul className="mt-6 space-y-3">
+      <ul className="mt-8 space-y-3">
         {question.choices.map((choice, index) => (
           <li key={choice.label}>
             <button
               type="button"
               onClick={() => select(question.id, index)}
-              className="w-full rounded-2xl border border-ink-200 px-5 py-4 text-left transition hover:border-amber-400 hover:bg-amber-50"
+              className="group flex w-full items-center justify-between gap-4 border border-hairline px-6 py-5 text-left transition duration-300 hover:border-gold-400/70 hover:bg-gold-400/[0.06]"
             >
-              <span className="block font-bold text-ink-800">
-                {choice.label}
-              </span>
-              {choice.hint ? (
-                <span className="mt-1 block text-sm text-ink-500">
-                  {choice.hint}
+              <span>
+                <span className="block font-mincho text-ivory">
+                  {choice.label}
                 </span>
-              ) : null}
+                {choice.hint ? (
+                  <span className="mt-1 block text-sm text-ivory-faint">
+                    {choice.hint}
+                  </span>
+                ) : null}
+              </span>
+              <span
+                aria-hidden
+                className="text-gold-400/50 transition group-hover:translate-x-1 group-hover:text-gold-300"
+              >
+                →
+              </span>
             </button>
           </li>
         ))}
       </ul>
+    </CornerFrame>
+  );
+}
+
+function Note({ title, children }: { title: string; children: string }) {
+  return (
+    <div className="border-l border-gold-400/60 bg-gold-400/[0.04] px-5 py-4">
+      <p className="font-mincho text-sm font-bold text-gold-200">{title}</p>
+      <p className="mt-2 text-[0.85rem] leading-loose text-ivory-dim">
+        {children}
+      </p>
     </div>
   );
 }
