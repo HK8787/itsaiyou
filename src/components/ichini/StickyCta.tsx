@@ -22,7 +22,7 @@ export function IchiniStickyCta() {
 
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 z-40 border-t border-hairline bg-noir-950/90 p-3 backdrop-blur-md transition-transform duration-500 lg:hidden ${
+      className={`fixed inset-x-0 bottom-0 z-40 border-t border-white/[0.07] bg-noir-950/90 p-3 backdrop-blur-md transition-transform duration-500 lg:hidden ${
         visible ? "translate-y-0" : "translate-y-full"
       }`}
       aria-hidden={!visible}
@@ -31,7 +31,7 @@ export function IchiniStickyCta() {
         <a
           href={site.contact.lineUrl}
           tabIndex={visible ? 0 : -1}
-          className="bg-gold-foil block py-3.5 text-center font-mincho font-bold tracking-[0.14em] text-noir-950"
+          className="block bg-gold-400 py-3.5 text-center font-bold tracking-[0.06em] text-noir-950"
         >
           LINEで相談する（無料）
         </a>

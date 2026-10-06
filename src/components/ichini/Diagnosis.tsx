@@ -2,12 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import {
-  CornerFrame,
-  GoldLineButton,
-  Ornament,
-  SalonLineNote,
-} from "@/components/ichini/ui";
+import { GoldLineButton, SalonLineNote } from "@/components/ichini/ui";
 
 /**
  * 年収アップ診断。
@@ -255,47 +250,35 @@ export function IchiniDiagnosis() {
     const move = moves[result.track];
 
     return (
-      <CornerFrame className="border border-hairline bg-noir-900/70 px-6 py-12 sm:px-12 sm:py-14">
-        <div className="text-center">
-          <p className="font-display text-xs tracking-salon text-gold-300 uppercase">
-            Your Result
-          </p>
-          <p className="mt-6 text-xs tracking-[0.2em] text-ivory-faint">
-            年収が上がる余地
-          </p>
-          <p className="text-gold-foil mt-3 font-mincho text-4xl font-bold sm:text-5xl">
-            {result.level.label}
-          </p>
-          <Ornament className="mt-8" />
-          <p className="mx-auto mt-8 max-w-lg text-[0.92rem] leading-loose text-ivory-dim">
-            {result.level.body}
-          </p>
-        </div>
+      <div className="border-t border-gold-400/50 pt-10">
+        <p className="text-[0.8rem] text-gold-400">診断の結果</p>
+        <h2 className="mt-4 font-mincho text-[1.7rem] leading-[1.5] font-bold text-ivory sm:text-[2.2rem]">
+          {"年収が上がる余地は、"}
+          <span className="text-gold-300">{`「${result.level.label}」`}</span>
+          {"です。"}
+        </h2>
+        <p className="mt-6 text-[0.95rem] leading-[2] text-ivory-dim">
+          {result.level.body}
+        </p>
 
-        <div className="mt-12 border-t border-hairline pt-10">
-          <p className="font-display text-xs tracking-salon text-gold-300 uppercase">
-            Recommended Moves
-          </p>
-          <p className="mt-3 font-mincho text-lg leading-relaxed font-bold text-ivory">
+        <div className="mt-12 border-t border-white/[0.08] pt-8">
+          <h3 className="font-mincho text-lg font-bold text-ivory">
             {move.title}
-          </p>
-          <ol className="mt-6 space-y-4">
-            {move.items.map((item, index) => (
+          </h3>
+          <ul className="mt-5 space-y-3">
+            {move.items.map((item) => (
               <li
                 key={item}
-                className="flex gap-4 text-[0.9rem] leading-relaxed text-ivory-dim"
+                className="relative pl-5 text-[0.92rem] leading-[1.9] text-ivory-dim before:absolute before:top-[0.95em] before:left-0 before:h-px before:w-2.5 before:bg-gold-400"
               >
-                <span className="font-display text-base text-gold-400 italic">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
                 {item}
               </li>
             ))}
-          </ol>
+          </ul>
         </div>
 
         {result.flags.size > 0 ? (
-          <div className="mt-10 space-y-4">
+          <div className="mt-10 space-y-6 border-t border-white/[0.08] pt-8">
             {result.flags.has("many") ? (
               <Note title="転職回数について">
                 回数そのものより「理由の一貫性」と「次はなぜ続けられるか」が見られます。職務経歴書での書き方を整えるだけで、書類の通り方が変わることは珍しくありません。
@@ -308,107 +291,103 @@ export function IchiniDiagnosis() {
             ) : null}
             {result.flags.has("short") ? (
               <Note title="経験年数について">
-                1年未満だと「経験者」としては見られにくい時期です。今の職種で経験を積むか、未経験の職種に挑戦するかで動き方が変わるので、そこからご一緒に考えましょう。
+                1年未満だと「経験者」としては見られにくい時期です。今の職種で経験を積むか、未経験の職種に挑戦するかで動き方が変わるので、そこから一緒に考えましょう。
               </Note>
             ) : null}
           </div>
         ) : null}
 
-        <p className="mt-8 text-[0.7rem] leading-relaxed text-ivory-faint">
+        <p className="mt-8 text-[0.72rem] leading-[1.8] text-ivory-faint">
           ※ この診断は目安です。年収アップを保証するものではありません。実際の条件は、経験の内容・地域・その時期の求人によって変わります。
         </p>
 
-        <div className="mt-12 border-t border-hairline pt-10 text-center">
-          <p className="font-mincho font-bold text-ivory">
-            この結果をLINEでお送りいただくと、お話が早く進みます
+        <div className="mt-12 bg-noir-850 p-6 sm:p-8">
+          <p className="font-mincho text-lg font-bold text-ivory">
+            この結果をLINEで送ってもらえれば、続きから話せます。
           </p>
-          <pre className="mt-6 max-h-52 overflow-auto border border-hairline bg-noir-950 p-5 text-left font-sans text-xs leading-relaxed whitespace-pre-wrap text-ivory-dim">
+          <pre className="mt-5 max-h-52 overflow-auto border border-white/[0.08] bg-noir-950 p-4 font-sans text-xs leading-relaxed whitespace-pre-wrap text-ivory-dim">
             {result.summary}
           </pre>
           <button
             type="button"
             onClick={() => copy(result.summary)}
-            className="mt-4 w-full border border-gold-400/60 py-3.5 font-mincho text-sm tracking-[0.12em] text-gold-200 transition hover:bg-gold-400/10"
+            className="mt-4 border-b border-ivory-faint/60 pb-1 text-sm text-ivory transition hover:border-gold-300"
           >
             {copied ? "コピーしました" : "結果をコピーする"}
           </button>
-          <div className="mt-6">
+          <div className="mt-7">
             <GoldLineButton block size="lg">
-              LINEで結果を相談する
+              LINEで結果を送る
             </GoldLineButton>
           </div>
-          <p className="mt-3 text-xs text-ivory-faint">
-            コピーした結果を、そのまま貼り付けてお送りいただけます
-          </p>
-          <div className="mt-2">
+          <div className="mt-3">
             <SalonLineNote />
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col items-center gap-4 font-mincho text-sm tracking-[0.08em]">
+        <div className="mt-10 flex flex-wrap gap-x-8 gap-y-4 text-sm">
           <Link
             href="/ichini/jobs/"
-            className="text-gold-200 underline decoration-gold-400/40 underline-offset-8"
+            className="border-b border-ivory-faint/60 pb-1 text-ivory transition hover:border-gold-300"
           >
             経験者向けの求人の例を見る
           </Link>
           <button
             type="button"
             onClick={reset}
-            className="text-ivory-faint underline decoration-ivory-faint/40 underline-offset-8"
+            className="border-b border-ivory-faint/40 pb-1 text-ivory-faint transition hover:text-ivory"
           >
-            もう一度診断する
+            もう一度やり直す
           </button>
         </div>
-      </CornerFrame>
+      </div>
     );
   }
 
   const question = questions[step];
 
   return (
-    <CornerFrame className="border border-hairline bg-noir-900/70 px-6 py-10 sm:px-12 sm:py-12">
-      <div className="flex items-center justify-between">
-        <p className="font-display text-sm tracking-[0.2em] text-gold-300">
-          <span className="text-2xl italic">{step + 1}</span>
-          <span className="mx-1.5 text-ivory-faint">/</span>
-          <span className="text-ivory-faint">{questions.length}</span>
+    <div>
+      <div className="flex items-center justify-between text-[0.8rem]">
+        <p className="text-gold-400">
+          {`質問 ${step + 1}`}
+          <span className="text-ivory-faint">{` ／ ${questions.length}`}</span>
         </p>
         {step > 0 ? (
           <button
             type="button"
             onClick={() => setStep((prev) => prev - 1)}
-            className="font-mincho text-xs tracking-[0.1em] text-ivory-faint underline decoration-ivory-faint/40 underline-offset-4"
+            className="text-ivory-faint underline decoration-ivory-faint/40 underline-offset-4 transition hover:text-ivory"
           >
-            前の質問に戻る
+            ひとつ戻る
           </button>
         ) : null}
       </div>
 
-      <div className="mt-5 h-px bg-noir-600">
+      <div className="mt-4 h-px bg-white/[0.1]">
         <div
-          className="bg-gold-foil h-px transition-all duration-500"
+          className="h-px bg-gold-400 transition-all duration-500"
           style={{ width: `${(step / questions.length) * 100}%` }}
         />
       </div>
 
-      <h3 className="mt-10 font-mincho text-xl leading-relaxed font-bold text-ivory sm:text-2xl">
+      <h2 className="mt-10 font-mincho text-[1.5rem] leading-[1.5] font-bold text-ivory sm:text-[1.9rem]">
         {question.title}
-      </h3>
+      </h2>
       <p className="mt-3 text-sm leading-relaxed text-ivory-faint">
         {question.note}
       </p>
 
-      <ul className="mt-8 space-y-3">
+      <ul className="mt-8 border-t border-white/[0.08]">
         {question.choices.map((choice, index) => (
           <li key={choice.label}>
             <button
               type="button"
               onClick={() => select(question.id, index)}
-              className="group flex w-full items-center justify-between gap-4 border border-hairline px-6 py-5 text-left transition duration-300 hover:border-gold-400/70 hover:bg-gold-400/[0.06]"
+              className="group flex w-full items-center justify-between gap-4 border-b border-white/[0.08] py-5 text-left transition-colors duration-200 hover:bg-white/[0.03]"
             >
               <span>
-                <span className="block font-mincho text-ivory">
+                <span className="block text-ivory sm:text-[1.05rem]">
                   {choice.label}
                 </span>
                 {choice.hint ? (
@@ -419,7 +398,7 @@ export function IchiniDiagnosis() {
               </span>
               <span
                 aria-hidden
-                className="text-gold-400/50 transition group-hover:translate-x-1 group-hover:text-gold-300"
+                className="pr-2 text-ivory-faint transition group-hover:translate-x-1 group-hover:text-gold-300"
               >
                 →
               </span>
@@ -427,15 +406,15 @@ export function IchiniDiagnosis() {
           </li>
         ))}
       </ul>
-    </CornerFrame>
+    </div>
   );
 }
 
 function Note({ title, children }: { title: string; children: string }) {
   return (
-    <div className="border-l border-gold-400/60 bg-gold-400/[0.04] px-5 py-4">
-      <p className="font-mincho text-sm font-bold text-gold-200">{title}</p>
-      <p className="mt-2 text-[0.85rem] leading-loose text-ivory-dim">
+    <div>
+      <p className="font-bold text-ivory">{title}</p>
+      <p className="mt-2 text-[0.88rem] leading-[1.9] text-ivory-dim">
         {children}
       </p>
     </div>

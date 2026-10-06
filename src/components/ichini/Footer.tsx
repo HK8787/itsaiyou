@@ -1,27 +1,28 @@
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { IchiniWordmark } from "@/components/ichini/Logo";
-import { Ornament } from "@/components/ichini/ui";
 import { ichini, ichiniNavigation } from "@/data/ichini";
 import { disclosePartners, partners } from "@/data/partners";
 import { site } from "@/data/site";
 
 export function IchiniFooter() {
   return (
-    <footer className="border-t border-hairline bg-noir-950 pt-20 pb-32 lg:pb-16">
+    <footer className="border-t border-white/[0.07] bg-noir-950 pt-16 pb-28 lg:pb-14">
       <Container>
-        <div className="flex flex-col items-center text-center">
-          <IchiniWordmark />
-          <p className="mt-6 font-mincho text-sm tracking-[0.12em] text-ivory-dim">
-            {ichini.tagline}
-          </p>
-          <Ornament className="mt-10" />
+        <div className="grid gap-12 md:grid-cols-[1.2fr_1fr]">
+          <div>
+            <IchiniWordmark />
+            <p className="mt-5 max-w-sm text-sm leading-[1.9] text-ivory-dim">
+              {"2回目・3回目の転職で、年収とキャリアを上げたい方の相談窓口です。" +
+                "相談は何度でも無料で、ご本人の費用負担はありません。"}
+            </p>
+          </div>
 
-          <ul className="mt-10 flex flex-wrap justify-center gap-x-8 gap-y-3 font-mincho text-[0.82rem] tracking-[0.12em]">
+          <ul className="grid grid-cols-2 gap-x-6 gap-y-3 text-[0.82rem]">
             <li>
               <Link
                 href={ichini.home}
-                className="text-ivory-dim transition hover:text-gold-200"
+                className="text-ivory-dim transition hover:text-ivory"
               >
                 トップ
               </Link>
@@ -30,24 +31,21 @@ export function IchiniFooter() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="text-ivory-dim transition hover:text-gold-200"
+                  className="text-ivory-dim transition hover:text-ivory"
                 >
                   {item.label}
                 </Link>
               </li>
             ))}
             <li>
-              <Link
-                href="/"
-                className="text-ivory-dim transition hover:text-gold-200"
-              >
+              <Link href="/" className="text-ivory-dim transition hover:text-ivory">
                 {`未経験の方（${site.name}）`}
               </Link>
             </li>
             <li>
               <Link
                 href="/privacy/"
-                className="text-ivory-dim transition hover:text-gold-200"
+                className="text-ivory-dim transition hover:text-ivory"
               >
                 プライバシーポリシー
               </Link>
@@ -55,10 +53,7 @@ export function IchiniFooter() {
           </ul>
         </div>
 
-        <div className="mx-auto mt-14 max-w-3xl border border-hairline p-6 text-xs leading-loose text-ivory-faint sm:p-8">
-          <p className="mb-3 font-mincho tracking-[0.12em] text-ivory-dim">
-            当サイトの位置づけについて
-          </p>
+        <div className="mt-14 border-t border-white/[0.07] pt-8 text-xs leading-[1.9] text-ivory-faint">
           <p>
             {`${ichini.name}は${site.operator.name}が運営しています。` +
               "職業紹介事業者ではなく、キャリアに関する情報提供と初期相談を行い、" +
@@ -79,14 +74,10 @@ export function IchiniFooter() {
             {"掲載している求人情報は、経験者向け求人の条件傾向をまとめたモデルケースです。" +
               "年収アップを保証するものではありません。実際の募集要項は個別にご案内します。"}
           </p>
+          <p className="mt-8">
+            {`© ${new Date().getFullYear()} ${ichini.name}（運営：${site.operator.name}）`}
+          </p>
         </div>
-
-        <p className="mt-12 text-center font-display text-xs tracking-salon text-ivory-faint uppercase">
-          {`© ${new Date().getFullYear()} Ichini Career`}
-        </p>
-        <p className="mt-2 text-center text-[0.7rem] text-ivory-faint">
-          {`運営：${site.operator.name}`}
-        </p>
       </Container>
     </footer>
   );

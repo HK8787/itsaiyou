@@ -1,55 +1,49 @@
 import type { IchiniJob } from "@/data/ichini";
 
-/** 求人の例。高級店のお品書きのように、余白と罫線だけで見せる */
-export function IchiniJobCard({ job }: { job: IchiniJob }) {
+/**
+ * 求人の例を1行で見せる。カードを3枚並べる形は使わない
+ * （同じ箱が等間隔に並ぶと、テンプレートにしか見えないため）。
+ */
+export function IchiniJobRow({
+  job,
+  detailed = false,
+}: {
+  job: IchiniJob;
+  detailed?: boolean;
+}) {
   return (
-    <article className="group relative flex flex-col border border-hairline bg-noir-900/60 p-7 transition duration-500 hover:border-gold-400/50 sm:p-8">
-      <span
-        aria-hidden
-        className="absolute top-0 left-8 h-px w-12 bg-gold-400 transition-all duration-500 group-hover:w-24"
-      />
-      <div className="flex items-center justify-between">
-        <span className="font-display text-[0.7rem] tracking-salon text-gold-300 uppercase">
-          {job.field === "IT" ? "Technology" : "Industry"}
-        </span>
-        <span className="text-[0.68rem] tracking-[0.1em] whitespace-nowrap text-ivory-faint">
+    <li className="grid gap-x-10 gap-y-3 border-b border-white/[0.08] py-8 md:grid-cols-[1fr_auto]">
+      <div>
+        <p className="text-[0.72rem] tracking-[0.06em] text-ivory-faint">
+          {job.field === "IT" ? "IT" : "IT以外"}
+          <span className="mx-2">／</span>
           モデルケース
-        </span>
+        </p>
+        <h3 className="mt-2 font-mincho text-lg leading-relaxed font-bold text-ivory sm:text-xl">
+          {job.title}
+        </h3>
+        <p className="mt-2 text-[0.88rem] leading-relaxed text-ivory-dim">
+          {`${job.forWhom}に。`}
+        </p>
+        {detailed ? (
+          <ul className="mt-5 space-y-2">
+            {job.points.map((point) => (
+              <li
+                key={point}
+                className="relative pl-4 text-[0.86rem] leading-relaxed text-ivory-dim before:absolute before:top-[0.8em] before:left-0 before:h-px before:w-2 before:bg-gold-400"
+              >
+                {point}
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
-      <h3 className="mt-5 font-mincho text-lg leading-relaxed font-bold text-ivory text-balance-ja">
-        {job.title}
-      </h3>
-      <p className="mt-3 text-[0.82rem] leading-relaxed text-ivory-dim">
-        {job.forWhom}
-      </p>
-
-      <div className="mt-6 flex items-baseline gap-3">
-        <span className="text-[0.7rem] tracking-[0.2em] text-ivory-faint">
-          年収
-        </span>
-        <span className="h-px flex-1 translate-y-[-0.25rem] border-b border-dotted border-gold-400/40" />
-        <span className="text-gold-foil font-mincho text-xl font-bold">
-          {job.salary.replace(/^年収/, "")}
-        </span>
+      <div className="md:text-right">
+        <p className="font-mincho text-xl font-bold whitespace-nowrap text-gold-300 sm:text-2xl">
+          {job.salary}
+        </p>
+        <p className="mt-1 text-[0.72rem] text-ivory-faint">{job.salaryNote}</p>
       </div>
-      <p className="mt-2 text-right text-[0.7rem] text-ivory-faint">
-        {job.salaryNote}
-      </p>
-
-      <ul className="mt-6 space-y-2.5 border-t border-hairline pt-6">
-        {job.points.map((point) => (
-          <li
-            key={point}
-            className="flex gap-3 text-[0.84rem] leading-relaxed text-ivory-dim"
-          >
-            <span
-              aria-hidden
-              className="mt-[0.6rem] h-1 w-1 shrink-0 rotate-45 bg-gold-400"
-            />
-            {point}
-          </li>
-        ))}
-      </ul>
-    </article>
+    </li>
   );
 }

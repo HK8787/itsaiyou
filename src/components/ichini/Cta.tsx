@@ -1,53 +1,45 @@
 import Link from "next/link";
 import { Container } from "@/components/Container";
-import {
-  CornerFrame,
-  GoldLineButton,
-  Ornament,
-  SalonLineNote,
-} from "@/components/ichini/ui";
+import { GoldLineButton, SalonLineNote } from "@/components/ichini/ui";
 import { site } from "@/data/site";
 
 export function IchiniCta({
-  title = "その経験で、どこまで届くか。まずはお聞かせください。",
-  lead = "転職するかどうかは、お話ししてから決めていただいて構いません。LINEで気軽にご相談いただけますし、条件に合う求人もご覧いただけます。相談は何度でも無料です。",
+  title = "今の経歴で、\nどこまで狙えるか。",
+  lead = "転職するかどうかは、話してから決めてください。LINEで気軽に相談できますし、条件に合う求人も見られます。相談は何度でも無料です。",
 }: {
   title?: string;
   lead?: string;
 }) {
   return (
-    <section className="relative overflow-hidden py-24 sm:py-32">
-      <div className="bg-grain absolute inset-0" aria-hidden />
-      <div
-        aria-hidden
-        className="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-gold-500/10 to-transparent"
-      />
-      <Container size="narrow" className="relative">
-        <CornerFrame className="px-6 py-14 text-center sm:px-14 sm:py-16">
-          <p className="font-display text-xs tracking-salon text-gold-300 uppercase">
-            Your Next Chapter
-          </p>
-          <h2 className="mt-6 font-mincho text-[1.5rem] leading-[1.7] font-bold text-ivory sm:text-[2rem] text-balance-ja">
-            {title}
-          </h2>
-          <Ornament className="mt-8" />
-          <p className="mx-auto mt-8 max-w-xl text-[0.95rem] leading-loose text-ivory-dim">
-            {lead}
-          </p>
-          <div className="mt-10 flex flex-col items-center gap-4">
-            <GoldLineButton size="lg">LINEで相談する（無料）</GoldLineButton>
-            <p className="text-xs text-ivory-faint">
-              {`返信の目安：${site.contact.replyTime}`}
+    <section className="border-t border-white/[0.07] py-20 sm:py-28">
+      <Container>
+        <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:items-end">
+          <div>
+            <h2 className="font-mincho text-[1.9rem] leading-[1.5] font-bold whitespace-pre-line text-ivory sm:text-[2.8rem]">
+              {title}
+            </h2>
+            <p className="mt-6 max-w-xl text-[0.95rem] leading-[2] text-ivory-dim">
+              {lead}
             </p>
-            <SalonLineNote />
+          </div>
+          <div className="lg:pb-2">
+            <GoldLineButton size="lg" block>
+              LINEで相談する（無料）
+            </GoldLineButton>
+            <div className="mt-4 space-y-1.5">
+              <p className="text-xs text-ivory-faint">
+                {`返信の目安：${site.contact.replyTime}`}
+              </p>
+              <SalonLineNote />
+            </div>
             <Link
               href="/ichini/shindan/"
-              className="mt-4 font-mincho text-sm tracking-[0.1em] text-gold-200 underline decoration-gold-400/40 underline-offset-8 transition hover:decoration-gold-300"
+              className="mt-6 inline-block border-b border-ivory-faint/60 pb-1 text-sm text-ivory transition hover:border-gold-300"
             >
-              先に年収アップ診断を受ける（約1分）
+              先に年収アップ診断をしてみる（約1分）
             </Link>
           </div>
-        </CornerFrame>
+        </div>
       </Container>
     </section>
   );

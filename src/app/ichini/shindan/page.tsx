@@ -13,11 +13,11 @@ export default function ShindanPage() {
   return (
     <>
       <IchiniHero
-        eyebrow="Private Assessment"
-        title="年収アップ診断"
-        lead="六つの質問にお答えいただくだけで、今の経験で年収が上がる余地と、あなたの職種で上がりやすい動き方をお返しします。所要時間は約1分です。"
+        label="年収アップ診断"
+        title="6問で、上がる余地を見る"
+        lead="今の仕事、経験年数、年齢、年収などを選ぶだけです。年収が上がる余地と、あなたの職種で上がりやすい動き方をお返しします。約1分です。"
       />
-      <section className="py-20 sm:py-28">
+      <section className="py-14 sm:py-20">
         <Container size="narrow">
           <IchiniDiagnosis />
         </Container>

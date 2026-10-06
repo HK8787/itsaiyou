@@ -10,15 +10,15 @@ export function IchiniHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-hairline bg-noir-950/80 backdrop-blur-md">
-      <div className="mx-auto flex h-[4.5rem] w-full max-w-6xl items-center justify-between gap-6 px-5 sm:px-8">
+    <header className="sticky top-0 z-50 border-b border-white/[0.07] bg-noir-950/90 backdrop-blur-md">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-6 px-5 sm:px-8">
         <Link
           href={ichini.home}
           className="shrink-0"
           onClick={() => setOpen(false)}
           aria-label={`${ichini.name} トップへ`}
         >
-          <IchiniWordmark compact />
+          <IchiniWordmark />
         </Link>
 
         <nav className="hidden shrink-0 items-center gap-9 whitespace-nowrap lg:flex">
@@ -26,14 +26,14 @@ export function IchiniHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="font-mincho text-[0.82rem] tracking-[0.14em] text-ivory-dim transition duration-300 hover:text-gold-200"
+              className="text-[0.82rem] tracking-[0.06em] text-ivory-dim transition duration-300 hover:text-ivory"
             >
               {item.label}
             </Link>
           ))}
           <a
             href={site.contact.lineUrl}
-            className="border border-gold-400/70 px-5 py-2.5 font-mincho text-[0.8rem] tracking-[0.14em] text-gold-200 transition duration-300 hover:bg-gold-400/10"
+            className="bg-gold-400 px-5 py-2.5 text-[0.8rem] font-bold tracking-[0.06em] text-noir-950 transition-colors duration-300 hover:bg-gold-300"
           >
             LINEで相談する
           </a>
@@ -67,7 +67,7 @@ export function IchiniHeader() {
       {open ? (
         <nav
           id="ichini-nav"
-          className="border-t border-hairline bg-noir-950 px-6 pt-4 pb-8 lg:hidden"
+          className="border-t border-white/[0.07] bg-noir-950 px-6 pt-4 pb-8 lg:hidden"
         >
           <ul className="flex flex-col">
             {ichiniNavigation.map((item) => (
@@ -75,7 +75,7 @@ export function IchiniHeader() {
                 <Link
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="block border-b border-hairline py-4 font-mincho tracking-[0.12em] text-ivory"
+                  className="block border-b border-white/[0.07] py-4 tracking-[0.04em] text-ivory"
                 >
                   {item.label}
                 </Link>
@@ -85,7 +85,7 @@ export function IchiniHeader() {
           <a
             href={site.contact.lineUrl}
             onClick={() => setOpen(false)}
-            className="bg-gold-foil mt-7 block py-4 text-center font-mincho font-bold tracking-[0.14em] text-noir-950"
+            className="mt-7 block bg-gold-400 py-4 text-center font-bold tracking-[0.06em] text-noir-950"
           >
             LINEで相談する
           </a>
